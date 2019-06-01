@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 #include <cmath>
-#define _USE_MATH_DEFINES
 #include <cstring>
 #include <random>
 #include <sstream>
@@ -77,7 +76,7 @@ int main(int argc, char* argv[])
 			pbc = argv[6];
 		}
 	}
-
+    
 
     // initialize internal parameters and arrays
     int dim = 2;
@@ -92,16 +91,17 @@ int main(int argc, char* argv[])
     const char* filename = bs.c_str();
     std::ofstream outputfile;
     outputfile.open(filename, std::ofstream::trunc);
-
-    outputfile << "#params: dim=" << dim
+    
+    outputfile << "#params: dim=" << dim 
       << "; agent_number=" << agent_number
       << "; velocity=" << velocity 
       << "; box_size=" << box_size 
-      << "; noise_strength=" << noise_strength
-      << "; neighborhood_radius=" << neighborhood_radius
-      << "; pbc=" << pbc
-      << "\n#time\t#agent_index\t#position\t#angle"
+      << "; noise_strength=" << noise_strength 
+      << "; neighborhood_radius=" << neighborhood_radius 
+      << "; pbc=" << pbc 
+      << "\n#time\t#agent_index\t#positions (dim rows)\t#angles ((dim-1) rows)"
       << std::endl;
+
 
     // allocate random positions and angles
     std::vector<std::vector<float> > positions = positions_init(
@@ -112,7 +112,6 @@ int main(int argc, char* argv[])
     // loop over time interval
     for (float time = 0; time < time_total; time += time_step)
     {
-        std::cout << time << std::endl;
         
         // loop over all agents in every time step
         for (int agent_ind = 0; agent_ind < agent_number; agent_ind++)
@@ -122,12 +121,13 @@ int main(int argc, char* argv[])
 
             // update direction, velocity and position
             // update_params();
-
-            // record frame if condition is met
-            
+  
         }
         
-        // record_frame(outputfile, time, positions, angles, angles=true, pos=true);
+        // record frame if condition is met  
+        
+        record_frame(outputfile, agent_number, time_step, 
+        timerecord_step, time, dim, positions, angles);
     }
 
 
