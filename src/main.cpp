@@ -3,13 +3,16 @@
 #include <fstream>
 #include <string>
 #include <cmath>
+#define _USE_MATH_DEFINES
 #include <cstring>
+#include <random>
 #include <sstream>
 #include <algorithm>
 #include <chrono>
 #include"record_frame.hpp"
 #include"check_neighborhood.hpp"
 #include"update_params.hpp"
+#include"system_init.hpp"
 
 // Main
 int main(int argc, char* argv[])
@@ -17,14 +20,15 @@ int main(int argc, char* argv[])
 
 	// Parameter potentially modified by parsing
     int agent_number;
-    std::string output_path = "";
-    float velocity = 1;
-    float boxsize = 100;
+    std::string output_path = "../data/";
+    float velocity = 1; 
+    float box_size = 100; 
     float noise_strength = 1;
     float neighborhood_radius = 1;
-    bool pbc = true;
-    float time_step = 0.5;
-    float time_total = 10;
+    bool pbc = true; // sets periodic boundary conditions
+    float time_step = 0.1; // smallest timestep for integration of ODEs
+    float timerecord_step = 0.5; // timestep for recording frames
+    float time_total = 10; // total runtime of the simulation
 
 
 	// Command line parsing handle
@@ -32,11 +36,11 @@ int main(int argc, char* argv[])
 	{
 		std::cerr << "\n\t\t---ERROR---\nCheck number of input arguments.\n\n"
 		"Usage:\n"
-		"\tArg 1: <NUMBER>\tNumber of agents in the Vicsek model\n"
+		"\tArg 1: <AGNTNO>\tNumber of agents in the Vicsek model\n"
 		"\tArg 2: <OUTPUT>\tOutput path\n"
 		"\tArg 3: <VELOCY>\tAgent velocity (default: 1)\n"
 		"\tArg 4: <BOXSIZ>\tLength of the quadratic box (default: 100)\n"
-		"\tArg 5: <NOISEC>\tCoefficient of the angular alignment noise (default: 1)\n"
+		"\tArg 5: <NOISTR>\tCoefficient of the angular alignment noise (default: 1)\n"
 		"\tArg 6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (default: 1)\n"
 		"\tArg 7: <PERIBC>\tSet periodic boundary conditions (default: true)\n"
         << std::endl;
@@ -58,7 +62,7 @@ int main(int argc, char* argv[])
 		}
 		if (argc >= 5)
 		{
-			boxsize = atof(argv[3]);
+			box_size = atof(argv[3]);
 		}
 		if (argc >= 6)
 		{
@@ -76,43 +80,56 @@ int main(int argc, char* argv[])
 
 
     // initialize internal parameters and arrays
-    float time = 0;
-    int agent_ind = 0;
+    int dim = 2;
     std::vector<int> neighbor_indices(0);
 
-/*
-    steps = (time_total / time_step) + 1;
-    std::vector<float> time_series(steps);
-    std::vector<std::vector<float> > angle_series(steps, std::vector<float>(agent_number));
-    std::vector<std::vector<std::vector<float> > > pos_series(steps, std::vector<std::vector<float> >(agent_number, std::vector<float>(2)));
-*/
+    
+    // create output file handle
+    std::string bs = std::string(output_path)
+        + "out_agntno_" + std::to_string(agent_number) 
+        + "_noistr_" + std::to_string(noise_strength) 
+        + ".txt";
+    const char* filename = bs.c_str();
+    std::ofstream outputfile;
+    outputfile.open(filename, std::ofstream::trunc);
+
+    outputfile << "#params: dim=" << dim
+      << "; agent_number=" << agent_number
+      << "; velocity=" << velocity 
+      << "; box_size=" << box_size 
+      << "; noise_strength=" << noise_strength
+      << "; neighborhood_radius=" << neighborhood_radius
+      << "; pbc=" << pbc
+      << "\n#time\t#agent_index\t#position\t#angle"
+      << std::endl;
 
     // allocate random positions and angles
-    system_init()
+    std::vector<std::vector<float> > positions = positions_init(
+        agent_number, box_size, dim);
+    std::vector<std::vector<float> > angles = angles_init(
+        agent_number, box_size, dim);
 
     // loop over time interval
-    while time < time_total
+    for (float time = 0; time < time_total; time += time_step)
     {
+        std::cout << time << std::endl;
+        
         // loop over all agents in every time step
-        for agent_ind < agent_number
+        for (int agent_ind = 0; agent_ind < agent_number; agent_ind++)
         {
             // determine agents within neighborhood radius
-            neighbor_indices = check_neighborhood();
+            // neighbor_indices = check_neighborhood();
 
             // update direction, velocity and position
-            update_params();
+            // update_params();
 
             // record frame if condition is met
-            record_frame();
+            
         }
+        
+        // record_frame(outputfile, time, positions, angles, angles=true, pos=true);
     }
 
-
-    // create output file handle
-    std::ofstream outputfile;
-	  outputfile.open("out.txt", std::ofstream::trunc);
-
-    outputfile << agent_number << std::endl;
 
     outputfile.close();
 
