@@ -119,13 +119,12 @@ int main(int argc, char* argv[])
             // determine agents within neighborhood radius
             // neighbor_indices = check_neighborhood();
 
-            // update direction, velocity and position
-            // update_params();
-  
         }
-        
+
+		// update direction, velocity and position
+		positions = update_positions(agent_number, dim, positions, angles, velocity, time_step);
+
         // record frame if condition is met  
-        
         record_frame(outputfile, agent_number, time_step, 
         timerecord_step, time, dim, positions, angles);
     }
