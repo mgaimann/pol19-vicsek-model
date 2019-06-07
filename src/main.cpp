@@ -12,6 +12,7 @@
 #include"check_neighborhood.hpp"
 #include"update_params.hpp"
 #include"system_init.hpp"
+#include"debugging_tools.hpp"
 
 // Main
 int main(int argc, char* argv[])
@@ -20,13 +21,13 @@ int main(int argc, char* argv[])
 	// Parameter potentially modified by parsing
     int agent_number;
     std::string output_path = "../data/";
-    float velocity = 1; 
+    float velocity = 5; 
     float box_size = 100; 
     float noise_strength = 1;
     float neighborhood_radius = 1;
     bool pbc = true; // sets periodic boundary conditions
-    float time_step = 0.1; // smallest timestep for integration of ODEs
-    float timerecord_step = 0.5; // timestep for recording frames
+    float time_step = 1; // smallest timestep for integration of ODEs
+    float timerecord_step = 1; // timestep for recording frames
     float time_total = 10; // total runtime of the simulation
 
 
@@ -108,11 +109,20 @@ int main(int argc, char* argv[])
         agent_number, box_size, dim);
     std::vector<std::vector<float> > angles = angles_init(
         agent_number, box_size, dim);
+	
+	// print elements of positions_init
+	
+
+	/*print(positions, agent_number, dim);*/
+
 
     // loop over time interval
     for (float time = 0; time < time_total; time += time_step)
     {
-        
+		// record frame if condition is met  
+		record_frame(outputfile, agent_number, time_step,
+			timerecord_step, time, dim, positions, angles);
+
         // loop over all agents in every time step
         for (int agent_ind = 0; agent_ind < agent_number; agent_ind++)
         {
@@ -122,11 +132,9 @@ int main(int argc, char* argv[])
         }
 
 		// update direction, velocity and position
-		positions = update_positions(agent_number, dim, positions, angles, velocity, time_step);
+		update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
-        // record frame if condition is met  
-        record_frame(outputfile, agent_number, time_step, 
-        timerecord_step, time, dim, positions, angles);
+
     }
 
 
