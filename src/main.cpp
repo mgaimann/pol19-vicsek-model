@@ -9,25 +9,27 @@
 #include <algorithm>
 #include <chrono>
 #include"record_frame.hpp"
-#include"check_neighborhood.hpp"
+//#include"check_neighborhood.hpp"
 #include"update_params.hpp"
 #include"system_init.hpp"
+#include"subspace_operations.hpp"
 
 // Main
 int main(int argc, char* argv[])
 {
 
 	// Parameter potentially modified by parsing
-    int agent_number;
-    std::string output_path = "../data/";
-    float velocity = 1; 
-    float box_size = 100; 
-    float noise_strength = 1;
-    float neighborhood_radius = 1;
-    bool pbc = true; // sets periodic boundary conditions
-    float time_step = 0.1; // smallest timestep for integration of ODEs
-    float timerecord_step = 0.5; // timestep for recording frames
-    float time_total = 10; // total runtime of the simulation
+      int agent_number;
+      std::string output_path = "../data/";
+      float velocity = 1;
+      float box_size = 1000;
+      float noise_strength = 1;
+      float neighborhood_radius = 1;
+      bool pbc = true; // sets periodic boundary conditions
+      float time_step = 0.01; // smallest timestep for integration of ODEs
+      float timerecord_step = 0.1; // timestep for recording frames
+      float time_total = 100; // total runtime of the simulation
+      int dim = 2;
 
 
 	// Command line parsing handle
@@ -65,7 +67,7 @@ int main(int argc, char* argv[])
 		}
 		if (argc >= 6)
 		{
-            noise_strength = atof(argv[4]);
+      noise_strength = atof(argv[4]);
 		}
 		if (argc >= 7)
 		{
@@ -76,29 +78,24 @@ int main(int argc, char* argv[])
 			pbc = argv[6];
 		}
 	}
-    
 
-    // initialize internal parameters and arrays
-    int dim = 2;
-    std::vector<int> neighbor_indices(0);
 
-    
     // create output file handle
     std::string bs = std::string(output_path)
-        + "out_agntno_" + std::to_string(agent_number) 
-        + "_noistr_" + std::to_string(noise_strength) 
+        + "out_agntno_" + std::to_string(agent_number)
+        + "_noistr_" + std::to_string(noise_strength)
         + ".txt";
     const char* filename = bs.c_str();
     std::ofstream outputfile;
     outputfile.open(filename, std::ofstream::trunc);
-    
-    outputfile << "#params: dim=" << dim 
+
+    outputfile << "#params: dim=" << dim
       << "; agent_number=" << agent_number
-      << "; velocity=" << velocity 
-      << "; box_size=" << box_size 
-      << "; noise_strength=" << noise_strength 
-      << "; neighborhood_radius=" << neighborhood_radius 
-      << "; pbc=" << pbc 
+      << "; velocity=" << velocity
+      << "; box_size=" << box_size
+      << "; noise_strength=" << noise_strength
+      << "; neighborhood_radius=" << neighborhood_radius
+      << "; pbc=" << pbc
       << "\n#time\t#agent_index\t#positions (dim rows)\t#angles ((dim-1) rows)"
       << std::endl;
 
@@ -109,24 +106,25 @@ int main(int argc, char* argv[])
     std::vector<std::vector<float> > angles = angles_init(
         agent_number, box_size, dim);
 
+
     // loop over time interval
     for (float time = 0; time < time_total; time += time_step)
     {
-        
-        // loop over all agents in every time step
-        for (int agent_ind = 0; agent_ind < agent_number; agent_ind++)
-        {
-            // determine agents within neighborhood radius
-            // neighbor_indices = check_neighborhood();
+        // initialize/reset subspace
+        std::vector<std::vector<std::vector<int> > > subspace_allocation = subspace_init(
+                box_size, neighborhood_radius, agent_number);
 
-        }
+        // allocate agents to subspaces
+        allocate_to_subspace(
+                subspace_allocation, neighborhood_radius, agent_number, positions);
 
 		// update direction, velocity and position
-		positions = update_positions(agent_number, dim, positions, angles, velocity, time_step);
+		positions = update_positions(
+		        agent_number, dim, positions, angles, velocity, time_step);
 
-        // record frame if condition is met  
-        record_frame(outputfile, agent_number, time_step, 
-        timerecord_step, time, dim, positions, angles);
+        // record frame if condition is met
+        record_frame(outputfile, agent_number, time_step,
+                timerecord_step, time, dim, positions, angles);
     }
 
 
