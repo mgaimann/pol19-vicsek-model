@@ -55,27 +55,27 @@ int main(int argc, char* argv[])
 		}
 		if (argc >= 3)
 		{
-			output_path = argv[1];
+			output_path = argv[2];
 		}
 		if (argc >= 4)
 		{
-			velocity = atof(argv[2]);
+			velocity = atof(argv[3]);
 		}
 		if (argc >= 5)
 		{
-			box_size = atof(argv[3]);
+			box_size = atof(argv[4]);
 		}
 		if (argc >= 6)
 		{
-      noise_strength = atof(argv[4]);
+      noise_strength = atof(argv[5]);
 		}
 		if (argc >= 7)
 		{
-			neighborhood_radius = atof(argv[5]);
+			neighborhood_radius = atof(argv[6]);
 		}
         if (argc == 8)
 		{
-			pbc = argv[6];
+			pbc = argv[7];
 		}
 	}
 
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
       << "; noise_strength=" << noise_strength
       << "; neighborhood_radius=" << neighborhood_radius
       << "; pbc=" << pbc
-      << "\n#time\t#agent_index\t#positions (dim rows)\t#angles ((dim-1) rows)"
+      << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
       << std::endl;
 
 
