@@ -78,15 +78,15 @@ int main(int argc, char* argv[])
 		}
 		if (argc >= 8)
 		{
-			pbc = argv[7];
+			pbc = atoi(argv[7]);
 		}
         if (argc >= 9)
         {
-            time_total = argv[8];
+            time_total = atof(argv[8]);
         }
         if (argc == 10)
         {
-            time_step = argv[9];
+            time_step = atof(argv[9]);
         }
 	}
 
