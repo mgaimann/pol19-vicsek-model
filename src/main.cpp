@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <chrono>
 #include"record_frame.hpp"
-//#include"check_neighborhood.hpp"
 #include"update_params.hpp"
 #include"system_init.hpp"
 #include"debugging_tools.hpp"
@@ -21,18 +20,17 @@ int main(int argc, char* argv[])
 {
 
 	// Parameter potentially modified by parsing
-	int agent_number;
-	std::string output_path = "../data/";
-	float velocity = 5;
-	float box_size = 100;
-	float noise_strength = 1;
-	float neighborhood_radius = 1;
-	bool pbc = true; // sets periodic boundary conditions
-	float time_step = 1; // smallest timestep for integration of ODEs
-	float timerecord_step = 1; // timestep for recording frames
-	float time_total = 10; // total runtime of the simulation
-	int dim = 2;
-
+      int agent_number;
+      std::string output_path = "../data/";
+      float velocity = 1;
+      float box_size = 10;
+      float noise_strength = 1;
+      float neighborhood_radius = 1;
+      bool pbc = true; // sets periodic boundary conditions
+      float time_step = 0.01; // smallest timestep for integration of ODEs
+      float timerecord_step = 0.1; // timestep for recording frames
+      float time_total = 100; // total runtime of the simulation
+      int dim = 2;
 
 
 	// Command line parsing handle
@@ -109,10 +107,18 @@ int main(int argc, char* argv[])
 	std::vector<std::vector<float> > angles = angles_init(
 		agent_number, box_size, dim);
 
-	// print elements of positions_init
 
+    // create subspace with M x M fields
+    // M is the box size divided by the specified neighborhood_radius
+    int subspacing_number = static_cast<int>(floor(box_size / neighborhood_radius)); //per dimension
 
-	/*print(positions, agent_number, dim);*/
+    // pre-allocated space for innermost vector (number of agent-indices):
+    int expected_agentnumber_per_subspace =
+            static_cast<int>( ceil(agent_number / std::pow(subspacing_number, 2) ) );
+
+    // determine neighboring cells in subspace
+    std::vector < std::vector < std::vector < std::vector<int> > > > subspace_cell_neighbors =
+            get_subspace_cell_neighbors(pbc, subspacing_number, dim);
 
 
 
@@ -124,16 +130,24 @@ int main(int argc, char* argv[])
 			timerecord_step, time, dim, positions, angles);
 
 		// initialize/reset subspace
-			std::vector<std::vector<std::vector<int> > > subspace_allocation = subspace_init(
-				box_size, neighborhood_radius, agent_number);
+        std::vector<std::vector<std::vector<int> > > subspace_allocation = subspace_init(
+            box_size, neighborhood_radius, agent_number);
 
-			// allocate agents to subspaces
-			allocate_to_subspace(
-				subspace_allocation, neighborhood_radius, agent_number, positions);
+        // allocate agents to subspaces
+        allocate_to_subspace(
+            subspace_allocation, neighborhood_radius, agent_number, positions);
 
-			// update direction, velocity and position
-			update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
-	}
+        // determine which agents interact with each other
+        std::vector<std::vector<int> > interacting_neighbors = get_interacting_neighbors(
+                subspace_cell_neighbors, subspace_allocation,
+                expected_agentnumber_per_subspace, subspacing_number, dim,
+                neighborhood_radius, positions, agent_number);
+
+        // update direction, velocity and position
+        update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
+
+
+    }
 
 
 		outputfile.close();
