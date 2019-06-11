@@ -70,33 +70,33 @@ std::vector < std::vector < std::vector < std::vector<int> > > > get_subspace_ce
                 {
                     // treat periodic boundary conditions for each dimension (hardcoded!)
                     // x
-                    if (nbcell_xdim_ind < 0 and pbc)
+                    if (nbcell_xdim_ind < 0 && pbc)
                     {
                         subspace_cell_neighbors[subspace_xcoord][subspace_ycoord][neighbor_ind][0] =
                                 nbcell_xdim_ind + subspacing_number;
                     }
-                    else if (nbcell_xdim_ind > subspacing_number-1 and pbc)
+                    else if (nbcell_xdim_ind > subspacing_number-1 && pbc)
                     {
                         subspace_cell_neighbors[subspace_xcoord][subspace_ycoord][neighbor_ind][0] =
                                 nbcell_xdim_ind - subspacing_number;
                     }
-                    else if (nbcell_xdim_ind <= subspacing_number-1 and nbcell_xdim_ind >= 0)
+                    else if (nbcell_xdim_ind <= subspacing_number-1 && nbcell_xdim_ind >= 0)
                     {
                         subspace_cell_neighbors[subspace_xcoord][subspace_ycoord][neighbor_ind][0] =
                                 nbcell_xdim_ind;
                     }
                     // y
-                    if (nbcell_ydim_ind < 0 and pbc)
+                    if (nbcell_ydim_ind < 0 && pbc)
                     {
                         subspace_cell_neighbors[subspace_xcoord][subspace_ycoord][neighbor_ind][1] =
                                 nbcell_ydim_ind + subspacing_number;
                     }
-                    else if (nbcell_ydim_ind > subspacing_number-1 and pbc)
+                    else if (nbcell_ydim_ind > subspacing_number-1 && pbc)
                     {
                         subspace_cell_neighbors[subspace_xcoord][subspace_ycoord][neighbor_ind][1] =
                                 nbcell_ydim_ind - subspacing_number;
                     }
-                    else if (nbcell_xdim_ind <= subspacing_number-1 and nbcell_xdim_ind >= 0)
+                    else if (nbcell_xdim_ind <= subspacing_number-1 && nbcell_xdim_ind >= 0)
                     {
                         subspace_cell_neighbors[subspace_xcoord][subspace_ycoord][neighbor_ind][1] =
                                 nbcell_ydim_ind;
@@ -162,19 +162,19 @@ std::vector<std::vector<int> > get_interacting_neighbors(
                         float ydistance = positions[nb_agent_ind][1] - positions[agent_ind][1];
 
                         // treat pbcs (hardcoded)
-                        if (xdistance < 0 and pbc)
+                        if (xdistance < 0 && pbc)
                         {
                             xdistance += box_size;
                         }
-                        else if (xdistance >= box_size and pbc)
+                        else if (xdistance >= box_size && pbc)
                         {
                             xdistance -= box_size;
                         }
-                        if (ydistance < 0 and pbc)
+                        if (ydistance < 0 && pbc)
                         {
                             ydistance += box_size;
                         }
-                        else if (ydistance >= box_size and pbc)
+                        else if (ydistance >= box_size && pbc)
                         {
                             ydistance -= box_size;
                         }
