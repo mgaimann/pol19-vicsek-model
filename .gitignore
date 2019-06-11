@@ -4,3 +4,5 @@
 *.obj
 /src/.vs/
 *.md.swp
+/.idea/
+/data/
