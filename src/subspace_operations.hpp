@@ -117,7 +117,7 @@ std::vector<std::vector<int> > get_interacting_neighbors(
         std::vector<std::vector<std::vector<int> > > subspace_allocation,
         int expected_agentnumber_per_subspace, int subspacing_number, int dim,
         float neighborhood_radius, std::vector<std::vector<float> > positions,
-        int agent_number
+        int agent_number, float box_size, bool pbc
         )
 {
     // initialize interaction container
@@ -158,15 +158,34 @@ std::vector<std::vector<int> > get_interacting_neighbors(
                         int nb_agent_ind = subspace_allocation[subsp_neighbor_xcoord][subsp_neighbor_ycoord][neighbor_ind];
 
                         // compute distance between subsp_agent and subsp_neighbor_agent (2D hardcoded)
-                        float distance = sqrt( std::pow( positions[nb_agent_ind][0] - positions[agent_ind][0], 2 ) +
-                                std::pow( positions[nb_agent_ind][1] - positions[agent_ind][1], 2 ) );
+                        float xdistance = positions[nb_agent_ind][0] - positions[agent_ind][0];
+                        float ydistance = positions[nb_agent_ind][1] - positions[agent_ind][1];
+
+                        // treat pbcs (hardcoded)
+                        if (xdistance < 0 and pbc)
+                        {
+                            xdistance += box_size;
+                        }
+                        else if (xdistance >= box_size and pbc)
+                        {
+                            xdistance -= box_size;
+                        }
+                        if (ydistance < 0 and pbc)
+                        {
+                            ydistance += box_size;
+                        }
+                        else if (ydistance >= box_size and pbc)
+                        {
+                            ydistance -= box_size;
+                        }
+
+                        // compute actual distance
+                        float distance = sqrt( std::pow( xdistance, 2 ) + std::pow( ydistance, 2 ) );
 
                         // decide on interaction between these two agents based on neighborhood_radius
                         if (distance <= neighborhood_radius)
                         {
                              interacting_neighbors[agent_ind].push_back(nb_agent_ind);
-
-                             // TREAT PBCs!!
                         }
                     }
                 }
