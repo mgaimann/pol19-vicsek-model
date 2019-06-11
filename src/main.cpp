@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <chrono>
 #include"record_frame.hpp"
-//#include"update_params.hpp"
+#include"update_params.hpp"
 #include"system_init.hpp"
 #include"debugging_tools.hpp"
 #include"subspace_operations.hpp"
@@ -154,9 +154,9 @@ int main(int argc, char* argv[])
                 neighborhood_radius, positions, agent_number, box_size, pbc);
 
         // update direction, velocity and position
-        //update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
+        update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
-
+        //angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors);
     }
 
 
