@@ -90,14 +90,15 @@ int main(int argc, char* argv[])
 	std::ofstream outputfile;
 	outputfile.open(filename, std::ofstream::trunc);
 
-	outputfile << "#params: dim=" << dim
-		<< "; agent_number=" << agent_number
-		<< "; velocity=" << velocity
-		<< "; box_size=" << box_size
-		<< "; noise_strength=" << noise_strength
-		<< "; neighborhood_radius=" << neighborhood_radius
-		<< "; pbc=" << pbc
-		<< "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
+	outputfile << "#parameter" << std::endl;
+	outputfile << "dim = " << dim << std::endl;
+	outputfile << "agent_number = " << agent_number << std::endl;
+	outputfile << "velocity = " << velocity << std::endl;
+	outputfile << "box_size = " << box_size << std::endl;
+	outputfile << "noise_strength = " << noise_strength << std::endl;
+	outputfile << "neighborhood_radius = " << neighborhood_radius << std::endl;
+	outputfile << "pbc = " << pbc << std::endl;
+	outputfile << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
 		<< std::endl;
 
 
