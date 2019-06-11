@@ -9,10 +9,11 @@
 #include <algorithm>
 #include <chrono>
 #include"record_frame.hpp"
-//#include"check_neighborhood.hpp"
 #include"update_params.hpp"
 #include"system_init.hpp"
+#include"debugging_tools.hpp"
 #include"subspace_operations.hpp"
+
 
 // Main
 int main(int argc, char* argv[])
@@ -36,15 +37,15 @@ int main(int argc, char* argv[])
 	if (argc < 2 || argc > 7)
 	{
 		std::cerr << "\n\t\t---ERROR---\nCheck number of input arguments.\n\n"
-		"Usage:\n"
-		"\tArg 1: <AGNTNO>\tNumber of agents in the Vicsek model\n"
-		"\tArg 2: <OUTPUT>\tOutput path\n"
-		"\tArg 3: <VELOCY>\tAgent velocity (default: 1)\n"
-		"\tArg 4: <BOXSIZ>\tLength of the quadratic box (default: 100)\n"
-		"\tArg 5: <NOISTR>\tCoefficient of the angular alignment noise (default: 1)\n"
-		"\tArg 6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (default: 1)\n"
-		"\tArg 7: <PERIBC>\tSet periodic boundary conditions (default: true)\n"
-        << std::endl;
+			"Usage:\n"
+			"\tArg 1: <AGNTNO>\tNumber of agents in the Vicsek model\n"
+			"\tArg 2: <OUTPUT>\tOutput path\n"
+			"\tArg 3: <VELOCY>\tAgent velocity (default: 1)\n"
+			"\tArg 4: <BOXSIZ>\tLength of the quadratic box (default: 100)\n"
+			"\tArg 5: <NOISTR>\tCoefficient of the angular alignment noise (default: 1)\n"
+			"\tArg 6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (default: 1)\n"
+			"\tArg 7: <PERIBC>\tSet periodic boundary conditions (default: true)\n"
+			<< std::endl;
 		return 0;
 	}
 	else
@@ -67,44 +68,45 @@ int main(int argc, char* argv[])
 		}
 		if (argc >= 6)
 		{
-      noise_strength = atof(argv[5]);
+			noise_strength = atof(argv[5]);
 		}
 		if (argc >= 7)
 		{
 			neighborhood_radius = atof(argv[6]);
 		}
-        if (argc == 8)
+		if (argc == 8)
 		{
 			pbc = argv[7];
 		}
 	}
 
 
-    // create output file handle
-    std::string bs = std::string(output_path)
-        + "out_agntno_" + std::to_string(agent_number)
-        + "_noistr_" + std::to_string(noise_strength)
-        + ".txt";
-    const char* filename = bs.c_str();
-    std::ofstream outputfile;
-    outputfile.open(filename, std::ofstream::trunc);
+	// create output file handle
+	std::string bs = std::string(output_path)
+		+ "out_agntno_" + std::to_string(agent_number)
+		+ "_noistr_" + std::to_string(noise_strength)
+		+ ".txt";
+	const char* filename = bs.c_str();
+	std::ofstream outputfile;
+	outputfile.open(filename, std::ofstream::trunc);
 
-    outputfile << "#params: dim=" << dim
-      << "; agent_number=" << agent_number
-      << "; velocity=" << velocity
-      << "; box_size=" << box_size
-      << "; noise_strength=" << noise_strength
-      << "; neighborhood_radius=" << neighborhood_radius
-      << "; pbc=" << pbc
-      << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
-      << std::endl;
+	outputfile << "#params: dim=" << dim
+		<< "; agent_number=" << agent_number
+		<< "; velocity=" << velocity
+		<< "; box_size=" << box_size
+		<< "; noise_strength=" << noise_strength
+		<< "; neighborhood_radius=" << neighborhood_radius
+		<< "; pbc=" << pbc
+		<< "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
+		<< std::endl;
 
 
-    // allocate random positions and angles
-    std::vector<std::vector<float> > positions = positions_init(
-        agent_number, box_size, dim);
-    std::vector<std::vector<float> > angles = angles_init(
-        agent_number, box_size, dim);
+	// allocate random positions and angles
+	std::vector<std::vector<float> > positions = positions_init(
+		agent_number, box_size, dim);
+	std::vector<std::vector<float> > angles = angles_init(
+		agent_number, box_size, dim);
+
 
     // create subspace with M x M fields
     // M is the box size divided by the specified neighborhood_radius
@@ -119,16 +121,21 @@ int main(int argc, char* argv[])
             get_subspace_cell_neighbors(pbc, subspacing_number, dim);
 
 
-    // main loop over time interval
-    for (float time = 0; time < time_total; time += time_step)
-    {
-        // initialize/reset subspace
+
+	// loop over time interval
+	for (float time = 0; time < time_total; time += time_step)
+	{
+		// record frame if condition is met  
+		record_frame(outputfile, agent_number, time_step,
+			timerecord_step, time, dim, positions, angles);
+
+		// initialize/reset subspace
         std::vector<std::vector<std::vector<int> > > subspace_allocation = subspace_init(
-                subspacing_number, expected_agentnumber_per_subspace);
+            box_size, neighborhood_radius, agent_number);
 
         // allocate agents to subspaces
         allocate_to_subspace(
-                subspace_allocation, neighborhood_radius, agent_number, positions);
+            subspace_allocation, neighborhood_radius, agent_number, positions);
 
         // determine which agents interact with each other
         std::vector<std::vector<int> > interacting_neighbors = get_interacting_neighbors(
@@ -136,19 +143,13 @@ int main(int argc, char* argv[])
                 expected_agentnumber_per_subspace, subspacing_number, dim,
                 neighborhood_radius, positions, agent_number);
 
-        // update angles taking interactions of agents into account
+        // update direction, velocity and position
+        update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
-		// update position
-		positions = update_positions(
-		        agent_number, dim, positions, angles, velocity, time_step);
 
-        // record frame if condition is met
-        record_frame(outputfile, agent_number, time_step,
-                timerecord_step, time, dim, positions, angles);
     }
 
 
-    outputfile.close();
-
-    printf("Moin");
+		outputfile.close();
+		printf("Moin");
 }
