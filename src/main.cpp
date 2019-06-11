@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
       int agent_number;
       std::string output_path = "../data/";
       float velocity = 1;
-      float box_size = 1000;
+      float box_size = 10;
       float noise_strength = 1;
       float neighborhood_radius = 1;
       bool pbc = true; // sets periodic boundary conditions
@@ -106,19 +106,39 @@ int main(int argc, char* argv[])
     std::vector<std::vector<float> > angles = angles_init(
         agent_number, box_size, dim);
 
+    // create subspace with M x M fields
+    // M is the box size divided by the specified neighborhood_radius
+    int subspacing_number = static_cast<int>(floor(box_size / neighborhood_radius)); //per dimension
 
-    // loop over time interval
+    // pre-allocated space for innermost vector (number of agent-indices):
+    int expected_agentnumber_per_subspace =
+            static_cast<int>( ceil(agent_number / std::pow(subspacing_number, 2) ) );
+
+    // determine neighboring cells in subspace
+    std::vector < std::vector < std::vector < std::vector<int> > > > subspace_cell_neighbors =
+            get_subspace_cell_neighbors(pbc, subspacing_number, dim);
+
+
+    // main loop over time interval
     for (float time = 0; time < time_total; time += time_step)
     {
         // initialize/reset subspace
         std::vector<std::vector<std::vector<int> > > subspace_allocation = subspace_init(
-                box_size, neighborhood_radius, agent_number);
+                subspacing_number, expected_agentnumber_per_subspace);
 
         // allocate agents to subspaces
         allocate_to_subspace(
                 subspace_allocation, neighborhood_radius, agent_number, positions);
 
-		// update direction, velocity and position
+        // determine which agents interact with each other
+        std::vector<std::vector<int> > interacting_neighbors = get_interacting_neighbors(
+                subspace_cell_neighbors, subspace_allocation,
+                expected_agentnumber_per_subspace, subspacing_number, dim,
+                neighborhood_radius, positions, agent_number);
+
+        // update angles taking interactions of agents into account
+
+		// update position
 		positions = update_positions(
 		        agent_number, dim, positions, angles, velocity, time_step);
 
