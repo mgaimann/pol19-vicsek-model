@@ -23,18 +23,18 @@ int main(int argc, char* argv[])
       int agent_number;
       std::string output_path = "../data/";
       float velocity = 1;
-      float box_size = 10;
+      float box_size = 100;
       float noise_strength = 1;
       float neighborhood_radius = 1;
       bool pbc = true; // sets periodic boundary conditions
-      float time_step = 0.01; // smallest timestep for integration of ODEs
-      float timerecord_step = 0.1; // timestep for recording frames
       float time_total = 100; // total runtime of the simulation
+      float time_step = 1; // smallest timestep for integration of ODEs
+      float timerecord_step = 1; // timestep for recording frames
       int dim = 2;
 
 
 	// Command line parsing handle
-	if (argc < 2 || argc > 7)
+	if (argc < 2 || argc > 10)
 	{
 		std::cerr << "\n\t\t---ERROR---\nCheck number of input arguments.\n\n"
 			"Usage:\n"
@@ -45,6 +45,8 @@ int main(int argc, char* argv[])
 			"\tArg 5: <NOISTR>\tCoefficient of the angular alignment noise (default: 1)\n"
 			"\tArg 6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (default: 1)\n"
 			"\tArg 7: <PERIBC>\tSet periodic boundary conditions (default: true)\n"
+            "\tArg 8: <TIMTOT>\tTotal time of the simulation (default: 100)\n"
+            "\tArg 9: <TIMSTP>\tTime step of the simulation (default: 1)\n"
 			<< std::endl;
 		return 0;
 	}
@@ -74,10 +76,18 @@ int main(int argc, char* argv[])
 		{
 			neighborhood_radius = atof(argv[6]);
 		}
-		if (argc == 8)
+		if (argc >= 8)
 		{
-			pbc = argv[7];
+			pbc = atoi(argv[7]);
 		}
+        if (argc >= 9)
+        {
+            time_total = atof(argv[8]);
+        }
+        if (argc == 10)
+        {
+            time_step = atof(argv[9]);
+        }
 	}
 
 
@@ -132,7 +142,7 @@ int main(int argc, char* argv[])
 
 		// initialize/reset subspace
         std::vector<std::vector<std::vector<int> > > subspace_allocation = subspace_init(
-            box_size, neighborhood_radius, agent_number);
+                subspacing_number, expected_agentnumber_per_subspace);
 
         // allocate agents to subspaces
         allocate_to_subspace(
@@ -142,12 +152,12 @@ int main(int argc, char* argv[])
         std::vector<std::vector<int> > interacting_neighbors = get_interacting_neighbors(
                 subspace_cell_neighbors, subspace_allocation,
                 expected_agentnumber_per_subspace, subspacing_number, dim,
-                neighborhood_radius, positions, agent_number);
+                neighborhood_radius, positions, agent_number, box_size, pbc);
 
         // update direction, velocity and position
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
-
+        //angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors);
     }
 
 
