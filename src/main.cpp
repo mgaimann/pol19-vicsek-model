@@ -101,13 +101,13 @@ int main(int argc, char* argv[])
 	outputfile.open(filename, std::ofstream::trunc);
 
 	outputfile << "#parameter" << std::endl;
-	outputfile << "dim = " << dim << std::endl;
-	outputfile << "agent_number = " << agent_number << std::endl;
-	outputfile << "velocity = " << velocity << std::endl;
-	outputfile << "box_size = " << box_size << std::endl;
-	outputfile << "noise_strength = " << noise_strength << std::endl;
-	outputfile << "neighborhood_radius = " << neighborhood_radius << std::endl;
-	outputfile << "pbc = " << pbc << std::endl;
+	outputfile << "dim=" << dim << std::endl;
+	outputfile << "agent_number=" << agent_number << std::endl;
+	outputfile << "velocity=" << velocity << std::endl;
+	outputfile << "box_size=" << box_size << std::endl;
+	outputfile << "noise_strength=" << noise_strength << std::endl;
+	outputfile << "neighborhood_radius=" << neighborhood_radius << std::endl;
+	outputfile << "pbc=" << pbc << std::endl;
 	outputfile << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
 		<< std::endl;
 
