@@ -129,21 +129,21 @@ std::vector<std::vector<int> > get_interacting_neighbors(
     {
         for (int subspace_ycoord = 0; subspace_ycoord < subspacing_number; subspace_ycoord++)
         {
-            std::cout << "x: " << subspace_xcoord << "\ty: " << subspace_ycoord << std::endl;
+            //std::cout << "x: " << subspace_xcoord << "\ty: " << subspace_ycoord << std::endl;
 
 
             // iterate through all agent_inds in one subspace cell
             for (int subsp_agent_ind = 0; subsp_agent_ind < subspace_allocation[subspace_xcoord][subspace_ycoord].size();
                 subsp_agent_ind++)
             {
-                std::cout << "subsp_agent" << subsp_agent_ind << "\tof " << subspace_allocation[subspace_xcoord][subspace_ycoord].size() << std::endl;
+                //std::cout << "subsp_agent" << subsp_agent_ind << "\tof " << subspace_allocation[subspace_xcoord][subspace_ycoord].size() << std::endl;
 
                 // retrieve agent index of agent in subspace cell
                 int agent_ind = subspace_allocation[subspace_xcoord][subspace_ycoord][subsp_agent_ind];
-                std::cout << "agent_ind: " << agent_ind << std::endl;
+                //std::cout << "agent_ind: " << agent_ind << std::endl;
 
                 // iterate through all neighboring cells to this cell
-                for (int nbcell_ind = 0; nbcell_ind < static_cast<int>(std::pow(subspacing_number, 2) ); nbcell_ind++)
+                for (int nbcell_ind = 0; nbcell_ind < static_cast<int>(std::pow(dim, 2) ); nbcell_ind++)
                 {
                     // retrieve x and y coords of current neighboring subspace cell
                     int subsp_neighbor_xcoord = subspace_cell_neighbors[subspace_xcoord][subspace_ycoord][nbcell_ind][0];

@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <chrono>
 #include"record_frame.hpp"
-#include"update_params.hpp"
+//#include"update_params.hpp"
 #include"system_init.hpp"
 #include"debugging_tools.hpp"
 #include"subspace_operations.hpp"
@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
 
 		// initialize/reset subspace
         std::vector<std::vector<std::vector<int> > > subspace_allocation = subspace_init(
-            box_size, neighborhood_radius, agent_number);
+                subspacing_number, expected_agentnumber_per_subspace);
 
         // allocate agents to subspaces
         allocate_to_subspace(
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
                 neighborhood_radius, positions, agent_number);
 
         // update direction, velocity and position
-        update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
+        //update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
 
     }
