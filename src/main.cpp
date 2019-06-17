@@ -100,6 +100,7 @@ int main(int argc, char* argv[])
 	std::ofstream outputfile;
 	outputfile.open(filename, std::ofstream::trunc);
 
+
 	outputfile << "#params: dim=" << dim
 		<< "; agent_number=" << agent_number
 		<< "; velocity=" << velocity

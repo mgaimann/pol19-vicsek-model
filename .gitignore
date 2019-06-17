@@ -1,9 +1,11 @@
-*.txt
+/data/*.txt
+/src/*.txt
 *.out
 *.exe
 *.obj
 /src/.vs/
 *.md.swp
 /.idea/
+/src/.idea/
 /data/
 /src/.ipynb_checkpoints/
