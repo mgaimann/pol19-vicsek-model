@@ -6,3 +6,4 @@
 *.md.swp
 /.idea/
 /data/
+/src/.ipynb_checkpoints/
