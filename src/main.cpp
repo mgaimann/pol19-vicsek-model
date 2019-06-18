@@ -109,6 +109,8 @@ int main(int argc, char* argv[])
     outputfile << "noise_strength=" << noise_strength << std::endl;
     outputfile << "neighborhood_radius=" << neighborhood_radius << std::endl;
     outputfile << "pbc=" << pbc << std::endl;
+    outputfile << "time_total=" << time_total << std::endl;
+    outputfile << "time_step=" << time_step << std::endl;
     outputfile << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
                << std::endl;
 
@@ -159,8 +161,9 @@ int main(int argc, char* argv[])
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
         angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors);
-    }
 
+	    printf("Time: %f\n", time);
+	}
 
 		outputfile.close();
 		printf("Moin");
