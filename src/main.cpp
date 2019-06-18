@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
       float time_step = 1; // smallest timestep for integration of ODEs
       float timerecord_step = 1; // timestep for recording frames
       int dim = 2;
-      bool debug = true;       ////DEBUGGING FLAG
+      bool debug = false;       ////DEBUGGING FLAG
 
 	// Command line parsing handle
 	if (argc < 2 || argc > 10)
@@ -101,16 +101,17 @@ int main(int argc, char* argv[])
 	outputfile.open(filename, std::ofstream::trunc);
 
 
-	outputfile << "#params: dim=" << dim
-		<< "; agent_number=" << agent_number
-		<< "; velocity=" << velocity
-		<< "; box_size=" << box_size
-		<< "; noise_strength=" << noise_strength
-		<< "; neighborhood_radius=" << neighborhood_radius
-		<< "; pbc=" << pbc
-		<< "; debug=" << debug
-		<< "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
-		<< std::endl;
+    outputfile << "#parameter" << std::endl;
+    outputfile << "dim=" << dim << std::endl;
+    outputfile << "agent_number=" << agent_number << std::endl;
+    outputfile << "velocity=" << velocity << std::endl;
+    outputfile << "box_size=" << box_size << std::endl;
+    outputfile << "noise_strength=" << noise_strength << std::endl;
+    outputfile << "neighborhood_radius=" << neighborhood_radius << std::endl;
+    outputfile << "pbc=" << pbc << std::endl;
+    outputfile << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
+               << std::endl;
+
 
 
 	// allocate random positions and angles
