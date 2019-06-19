@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
       float time_step = 1; // smallest timestep for integration of ODEs
       float timerecord_step = 1; // timestep for recording frames
       int dim = 2;
-
+      bool debug = false;       ////DEBUGGING FLAG
 
 	// Command line parsing handle
 	if (argc < 2 || argc > 10)
@@ -100,16 +100,20 @@ int main(int argc, char* argv[])
 	std::ofstream outputfile;
 	outputfile.open(filename, std::ofstream::trunc);
 
-	outputfile << "#parameter" << std::endl;
-	outputfile << "dim=" << dim << std::endl;
-	outputfile << "agent_number=" << agent_number << std::endl;
-	outputfile << "velocity=" << velocity << std::endl;
-	outputfile << "box_size=" << box_size << std::endl;
-	outputfile << "noise_strength=" << noise_strength << std::endl;
-	outputfile << "neighborhood_radius=" << neighborhood_radius << std::endl;
-	outputfile << "pbc=" << pbc << std::endl;
-	outputfile << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
-		<< std::endl;
+
+    outputfile << "#parameter" << std::endl;
+    outputfile << "dim=" << dim << std::endl;
+    outputfile << "agent_number=" << agent_number << std::endl;
+    outputfile << "velocity=" << velocity << std::endl;
+    outputfile << "box_size=" << box_size << std::endl;
+    outputfile << "noise_strength=" << noise_strength << std::endl;
+    outputfile << "neighborhood_radius=" << neighborhood_radius << std::endl;
+    outputfile << "pbc=" << pbc << std::endl;
+    outputfile << "time_total=" << time_total << std::endl;
+    outputfile << "time_step=" << time_step << std::endl;
+    outputfile << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
+               << std::endl;
+
 
 
 	// allocate random positions and angles
@@ -129,8 +133,7 @@ int main(int argc, char* argv[])
 
     // determine neighboring cells in subspace
     std::vector < std::vector < std::vector < std::vector<int> > > > subspace_cell_neighbors =
-            get_subspace_cell_neighbors(pbc, subspacing_number, dim);
-
+            get_subspace_cell_neighbors(pbc, subspacing_number, dim, debug);
 
 
 	// loop over time interval
@@ -152,14 +155,15 @@ int main(int argc, char* argv[])
         std::vector<std::vector<int> > interacting_neighbors = get_interacting_neighbors(
                 subspace_cell_neighbors, subspace_allocation,
                 expected_agentnumber_per_subspace, subspacing_number, dim,
-                neighborhood_radius, positions, agent_number, box_size, pbc);
+                neighborhood_radius, positions, agent_number, box_size, pbc, debug);
 
         // update direction, velocity and position
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
-        //angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors);
-    }
+        angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors);
 
+	    printf("Time: %f\n", time);
+	}
 
 		outputfile.close();
 		printf("Moin");

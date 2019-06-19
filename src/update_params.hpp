@@ -11,7 +11,7 @@ void update_positions(int agent_number, int dim, std::vector<std::vector<float> 
 				positions[agent_ind][dim_ind] += velocity * cos(angles[agent_ind][dim_ind]) * time_step;
 
 				//periodic boundary condition
-				if (positions[agent_ind][dim_ind] > box_size)
+				if (positions[agent_ind][dim_ind] >= box_size)
 				{
 					positions[agent_ind][dim_ind] -= box_size;
 				}
@@ -26,7 +26,7 @@ void update_positions(int agent_number, int dim, std::vector<std::vector<float> 
 				positions[agent_ind][dim_ind] += velocity * sin(angles[agent_ind][dim_ind]) * time_step;
 				
 				//periodic boundary condition
-				if (positions[agent_ind][dim_ind] > box_size)
+				if (positions[agent_ind][dim_ind] >= box_size)
 				{
 					positions[agent_ind][dim_ind] -= box_size;
 				}
@@ -57,7 +57,8 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 				float angle_sum = 0;
 
 				//stochastic differential equation
-				for (int interact_neighbor_ind = 0; interact_neighbor_ind < interacting_neighbors[agent_ind].size(); interact_neighbor_ind++)
+				for (int interact_neighbor_ind = 0; interact_neighbor_ind < interacting_neighbors[agent_ind].size();
+				    interact_neighbor_ind++)
 				{
 					int selected_agent_ind = interacting_neighbors[agent_ind][interact_neighbor_ind];
 					angle_sum += angles[selected_agent_ind][dim_ind];

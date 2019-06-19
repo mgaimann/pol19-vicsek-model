@@ -39,7 +39,7 @@ std::vector<std::vector<float> > angles_init(int agent_number,
         // initialize random number generator, draw from [0;box_size)
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_real_distribution<> dis(0.0, 2*atan(1) * 4);
+        std::uniform_real_distribution<> dis(-atan(1) * 4, atan(1) * 4);
         // CAUTION: for generalization to 3D adapt random interval
         
         // draw for each agent, for each dimension one random number
