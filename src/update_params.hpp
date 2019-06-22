@@ -66,6 +66,15 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 
 				float mean_angle = angle_sum / interacting_neighbors[agent_ind].size();
 				angles[agent_ind][dim_ind] = mean_angle + noise_strength * dis(gen);
+				// pbc, put angles into [-pi,pi)
+				if (angles[agent_ind][dim_ind] > atan(1) * 4)
+				{ 
+					angles[agent_ind][dim_ind] -= 2 * atan(1) * 4;
+				}
+				else if (angles[agent_ind][dim_ind] <= -atan(1) * 4)
+				{
+					angles[agent_ind][dim_ind] += 2 * atan(1) * 4;
+				}
 			}
 		}
 	}
