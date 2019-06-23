@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 
 	// create output file handle
 	std::string bs = std::string(output_path)
-		+ "out_agntno_" + std::to_string(agent_number)
+		+ "out_boxsz_" + std::to_string(box_size)
 		+ "_noistr_" + std::to_string(noise_strength)
 		+ ".txt";
 	const char* filename = bs.c_str();
