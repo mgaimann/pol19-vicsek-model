@@ -73,9 +73,7 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 				angles[agent_ind][dim_ind] = mean_angle + noise_strength * dis(gen);
 
 				// treat pbc of angular variables, do modulo 2pi
-				std::cout << "before: " << angles[agent_ind][dim_ind] << std::endl;
                 angles[agent_ind][dim_ind] = fmod(angles[agent_ind][dim_ind], angle_interval_high);
-                std::cout << "after : " << angles[agent_ind][dim_ind] << "\n\n" << std::endl;
 			}
 		}
 	}
