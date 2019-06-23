@@ -115,9 +115,9 @@ int main(int argc, char* argv[])
                << std::endl;
 
 
-    // define angle interval, here: [0, 2pi)
-    float angle_interval_low = 0;
-    float angle_interval_high = atan(1) * 4 * 2;
+    // define angle interval, here: [-pi, pi)
+    float angle_interval_low = - atan(1) * 4;
+    float angle_interval_high = atan(1) * 4;
 
 
 	// allocate random positions and angles
