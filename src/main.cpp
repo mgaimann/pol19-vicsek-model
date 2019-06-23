@@ -166,10 +166,8 @@ int main(int argc, char* argv[])
 
         angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors,
                 angle_interval_low, angle_interval_high);
-
-	    printf("Time: %f\n", time);
 	}
 
     outputfile.close();
-    printf("Moin");
+    //printf("Moin");
 }
