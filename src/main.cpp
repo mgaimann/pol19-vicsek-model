@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
       float time_step = 1; // smallest timestep for integration of ODEs
       float timerecord_step = 1; // timestep for recording frames
       int dim = 2;
-      bool debug = true;       ////DEBUGGING FLAG
+      bool debug = false;       ////DEBUGGING FLAG
 
 	// Command line parsing handle
 	if (argc < 2 || argc > 10)
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 
 	// create output file handle
 	std::string bs = std::string(output_path)
-		+ "out_agntno_" + std::to_string(agent_number)
+		+ "out_boxsz_" + std::to_string(box_size)
 		+ "_noistr_" + std::to_string(noise_strength)
 		+ ".txt";
 	const char* filename = bs.c_str();
@@ -101,23 +101,30 @@ int main(int argc, char* argv[])
 	outputfile.open(filename, std::ofstream::trunc);
 
 
-	outputfile << "#params: dim=" << dim
-		<< "; agent_number=" << agent_number
-		<< "; velocity=" << velocity
-		<< "; box_size=" << box_size
-		<< "; noise_strength=" << noise_strength
-		<< "; neighborhood_radius=" << neighborhood_radius
-		<< "; pbc=" << pbc
-		<< "; debug=" << debug
-		<< "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
-		<< std::endl;
+    outputfile << "#parameter" << std::endl;
+    outputfile << "dim=" << dim << std::endl;
+    outputfile << "agent_number=" << agent_number << std::endl;
+    outputfile << "velocity=" << velocity << std::endl;
+    outputfile << "box_size=" << box_size << std::endl;
+    outputfile << "noise_strength=" << noise_strength << std::endl;
+    outputfile << "neighborhood_radius=" << neighborhood_radius << std::endl;
+    outputfile << "pbc=" << pbc << std::endl;
+    outputfile << "time_total=" << time_total << std::endl;
+    outputfile << "time_step=" << time_step << std::endl;
+    outputfile << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
+               << std::endl;
+
+
+    // define angle interval, here: [0, 2pi)
+    float angle_interval_low = 0;
+    float angle_interval_high = atan(1) * 4 * 2;
 
 
 	// allocate random positions and angles
 	std::vector<std::vector<float> > positions = positions_init(
 		agent_number, box_size, dim);
 	std::vector<std::vector<float> > angles = angles_init(
-		agent_number, box_size, dim);
+		agent_number, box_size, dim, angle_interval_low, angle_interval_high);
 
 
     // create subspace with M x M fields
@@ -157,10 +164,12 @@ int main(int argc, char* argv[])
         // update direction, velocity and position
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
-        angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors);
-    }
+        angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors,
+                angle_interval_low, angle_interval_high);
 
+	    printf("Time: %f\n", time);
+	}
 
-		outputfile.close();
-		printf("Moin");
+    outputfile.close();
+    printf("Moin");
 }
