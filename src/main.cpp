@@ -115,12 +115,16 @@ int main(int argc, char* argv[])
                << std::endl;
 
 
+    // define angle interval, here: [0, 2pi)
+    float angle_interval_low = 0;
+    float angle_interval_high = atan(1) * 4 * 2;
+
 
 	// allocate random positions and angles
 	std::vector<std::vector<float> > positions = positions_init(
 		agent_number, box_size, dim);
 	std::vector<std::vector<float> > angles = angles_init(
-		agent_number, box_size, dim);
+		agent_number, box_size, dim, angle_interval_low, angle_interval_high);
 
 
     // create subspace with M x M fields
@@ -160,11 +164,12 @@ int main(int argc, char* argv[])
         // update direction, velocity and position
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
-        angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors);
+        angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors,
+                angle_interval_low, angle_interval_high);
 
 	    printf("Time: %f\n", time);
 	}
 
-		outputfile.close();
-		printf("Moin");
+    outputfile.close();
+    printf("Moin");
 }

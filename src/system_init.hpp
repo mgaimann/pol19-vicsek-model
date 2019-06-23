@@ -28,7 +28,8 @@ std::vector<std::vector<float> > positions_init(int agent_number,
 }
 
 std::vector<std::vector<float> > angles_init(int agent_number, 
-    float box_size, int dim, std::string init_mode = "random_uniform")
+    float box_size, int dim, float angle_interval_low, float angle_interval_high,
+    std::string init_mode = "random_uniform")
 {
     std::vector<std::vector<float> > angles(agent_number, 
         std::vector<float>(dim-1));
@@ -39,7 +40,7 @@ std::vector<std::vector<float> > angles_init(int agent_number,
         // initialize random number generator, draw from [0;box_size)
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_real_distribution<> dis(-atan(1) * 4, atan(1) * 4);
+        std::uniform_real_distribution<> dis(angle_interval_low, angle_interval_high);
         // CAUTION: for generalization to 3D adapt random interval
         
         // draw for each agent, for each dimension one random number
