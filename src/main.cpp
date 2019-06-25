@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
       float noise_strength = 1;
       float neighborhood_radius = 1;
       bool pbc = true; // sets periodic boundary conditions
-      float time_total = 100; // total runtime of the simulation
+      float time_total = 130; // total runtime of the simulation
       float time_step = 1; // smallest timestep for integration of ODEs
       float timerecord_step = 1; // timestep for recording frames
       int dim = 2;
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 		}
 		if (argc >= 6)
 		{
-			noise_strength = atof(argv[5]);
+			noise_strength = static_cast<double>(atof(argv[5])/100.0);
 		}
 		if (argc >= 7)
 		{
@@ -93,8 +93,14 @@ int main(int argc, char* argv[])
 
 	// create output file handle
 	std::string bs = std::string(output_path)
-		+ "out_boxsz_" + std::to_string(box_size)
-		+ "_noistr_" + std::to_string(noise_strength)
+	    + "out_N_" + std::to_string(agent_number)
+	    + "_v_" + std::to_string(velocity)
+		+ "_L_" + std::to_string(box_size)
+		+ "_eta_" + std::to_string(noise_strength)
+		+ "_r_" + std::to_string(neighborhood_radius)
+		+ "_pbc_" + std::to_string(pbc)
+		+ "_totaltime_" + std::to_string(time_total)
+		+ "_timestep_" + std::to_string(time_step)
 		+ ".txt";
 	const char* filename = bs.c_str();
 	std::ofstream outputfile;
