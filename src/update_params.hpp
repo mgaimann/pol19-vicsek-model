@@ -42,13 +42,12 @@ void update_positions(int agent_number, int dim, std::vector<std::vector<float> 
 
 std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::vector<std::vector<float> > angles,
 	float noise_strength, std::vector<std::vector<int> > interacting_neighbors, float angle_interval_low,
-	float angle_interval_high)
+	float angle_interval_high, std::mt19937& gen)
 {
 
-	// initialize random number generator, draw from [-pi;pi)
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<> dis(angle_interval_low, angle_interval_high);
+	// RNG: draw from [-pi;pi)
+    std::uniform_real_distribution<> dis(angle_interval_low, angle_interval_high);
+
 
 	for (int agent_ind = 0; agent_ind < agent_number; agent_ind++)
 	{

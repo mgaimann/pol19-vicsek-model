@@ -31,7 +31,11 @@ int main(int argc, char* argv[])
       float time_step = 1; // smallest timestep for integration of ODEs
       float timerecord_step = 1; // timestep for recording frames
       int dim = 2;
-      bool debug = false;       ////DEBUGGING FLAG
+
+      // Debugging options
+      bool debug = false;
+      int seed = 1996;
+
 
 	// Command line parsing handle
 	if (argc < 2 || argc > 10)
@@ -70,7 +74,7 @@ int main(int argc, char* argv[])
 		}
 		if (argc >= 6)
 		{
-			noise_strength = static_cast<double>(atof(argv[5])/100.0);
+			noise_strength = atof(argv[5]);
 		}
 		if (argc >= 7)
 		{
@@ -121,6 +125,12 @@ int main(int argc, char* argv[])
                << std::endl;
 
 
+    // initialize random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    gen.seed(seed);
+
+
     // define angle interval, here: [-pi, pi)
     float angle_interval_low = - atan(1) * 4;
     float angle_interval_high = atan(1) * 4;
@@ -128,9 +138,9 @@ int main(int argc, char* argv[])
 
 	// allocate random positions and angles
 	std::vector<std::vector<float> > positions = positions_init(
-		agent_number, box_size, dim);
+		agent_number, box_size, dim, gen);
 	std::vector<std::vector<float> > angles = angles_init(
-		agent_number, box_size, dim, angle_interval_low, angle_interval_high);
+		agent_number, box_size, dim, angle_interval_low, angle_interval_high, gen);
 
 
     // create subspace with M x M fields
@@ -171,7 +181,7 @@ int main(int argc, char* argv[])
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 
         angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors,
-                angle_interval_low, angle_interval_high);
+                angle_interval_low, angle_interval_high, gen);
 	}
 
     outputfile.close();
