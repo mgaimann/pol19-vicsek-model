@@ -1,7 +1,7 @@
 #structure of our report
 
 Introduction
-	Motility assay (biological description, why is this important for humankind :), whicch observations have been made)
+	Motility assay (biological description, why is this important for humankind/biophysics :), which observations have been made)
 		nematic lines vs polar lines --> what is the difference?
 	Computational approach to understand the motility assay: how can the motility assay be described mathematically? which assumptions can we make?
 Vicsek model
@@ -9,15 +9,24 @@ Vicsek model
 	importance of the Vicsek model
 	why can we use this model for the motility assay? how does the biological structure fit the assumptions in the model?
 Our work - ideas for the evaluation
-	cell-by-cell evaluation vs normal evaluation
-		--> time plot (time needed by the programm with and without cell-by-cell evaluation depending on particle number)
+Evaluation/results
+	-> summary of the aspects we found
 	phase space
 	parameter dependencies we have found
 	find critical density, above which there are density waves and other interesting behaviour, below this critical density we do not get any fancy behaviour of the assay 
-	do our results confirm the results of the papers?
-Evaluation/results
-	summary of the aspects we found
-Appendix
-	written code
-	work done by the team members
-	citations of papers!/bibliography
+	do our results confirm the results of the papers? (Discussion I)
+Comparison Vicsek/our results to Frey et al. papers (Discussion II)
+    what do they have in common? what is different?
+    universality classes and scaling parameters
+    stability of nematic/polar phases
+    paradigm change: universality (2010) vs. dynamic emergence of order (2018)?
+Conclusion
+Acknowledgements
+Author Contributions
+References
+
+   
+Supplementary Material
+	cell-by-cell evaluation vs normal evaluation
+	--> time plot (time needed by the programm with and without cell-by-cell evaluation depending on particle number)
+	((( written code ))) -> link/QR to gitlab (DOI?)
