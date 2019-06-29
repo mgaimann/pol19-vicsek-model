@@ -30,6 +30,7 @@ int main(int argc, char* argv[])
       float time_total = 130; // total runtime of the simulation
       float time_step = 1; // smallest timestep for integration of ODEs
       float timerecord_step = 1; // timestep for recording frames
+      float polar_interact_prob = 1;
       int dim = 2;
 
       // Debugging options
@@ -38,20 +39,21 @@ int main(int argc, char* argv[])
 
 
 	// Command line parsing handle
-	if (argc < 2 || argc > 10)
+	if (argc < 2 || argc > 11)
 	{
 		std::cerr << "\n\t\t---ERROR---\nCheck number of input arguments.\n\n"
 			"Usage:\n"
-			"\tArg 1: <AGNTNO>\tNumber of agents in the Vicsek model\n"
-			"\tArg 2: <OUTPUT>\tOutput path\n"
-			"\tArg 3: <VELOCY>\tAgent velocity (default: 1)\n"
-			"\tArg 4: <BOXSIZ>\tLength of the quadratic box (default: 100)\n"
-			"\tArg 5: <NOISTR>\tCoefficient of the angular alignment noise (default: 1)\n"
-			"\tArg 6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (default: 1)\n"
-			"\tArg 7: <PERIBC>\tSet periodic boundary conditions (default: true)\n"
-            "\tArg 8: <TIMTOT>\tTotal time of the simulation (default: 100)\n"
-            "\tArg 9: <TIMSTP>\tTime step of the simulation (default: 1)\n"
-			<< std::endl;
+			"\tArg  1: <AGNTNO>\tNumber of agents in the Vicsek model\n"
+			"\tArg  2: <OUTPUT>\tOutput path\n"
+			"\tArg  3: <VELOCY>\tAgent velocity (default: 1)\n"
+			"\tArg  4: <BOXSIZ>\tLength of the quadratic box (default: 100)\n"
+			"\tArg  5: <NOISTR>\tCoefficient of the angular alignment noise (default: 1)\n"
+			"\tArg  6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (default: 1)\n"
+			"\tArg  7: <PERIBC>\tSet periodic boundary conditions (default: true)\n"
+            "\tArg  8: <TIMTOT>\tTotal time of the simulation (default: 100)\n"
+            "\tArg  9: <TIMSTP>\tTime step of the simulation (default: 1)\n"
+            "\tArg 10: <POLPRB>\tProbability of polar interactions with respect to\n\t\tnematic interactions (default: 1 (polar))\n"
+            << std::endl;
 		return 0;
 	}
 	else
@@ -91,6 +93,10 @@ int main(int argc, char* argv[])
         if (argc == 10)
         {
             time_step = atof(argv[9]);
+        }
+        if (argc == 11)
+        {
+            polar_interact_prob = atof(argv[10]);
         }
 	}
 
@@ -178,10 +184,10 @@ int main(int argc, char* argv[])
                 neighborhood_radius, positions, agent_number, box_size, pbc, debug);
 
         // update direction, velocity and position
-        update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
-
         angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors,
-                angle_interval_low, angle_interval_high, gen);
+                               angle_interval_low, angle_interval_high, gen, polar_interact_prob);
+
+        update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
 	}
 
     outputfile.close();

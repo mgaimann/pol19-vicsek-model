@@ -1,3 +1,10 @@
+// defines the signum function
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
+
+// updates the positions of all agents from time t to t+1
 void update_positions(int agent_number, int dim, std::vector<std::vector<float> > &positions,
 	std::vector<std::vector<float> > angles, float velocity, float time_step, float box_size)
 {
@@ -40,17 +47,28 @@ void update_positions(int agent_number, int dim, std::vector<std::vector<float> 
 	}
 }
 
+
+// updates the angles of all agents from time t to t+1
 std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::vector<std::vector<float> > angles,
 	float noise_strength, std::vector<std::vector<int> > interacting_neighbors, float angle_interval_low,
-	float angle_interval_high, std::mt19937& gen)
+	float angle_interval_high, std::mt19937& gen, float polar_interact_prob)
 {
 
-	// RNG: draw from [-pi;pi)
+	// RNG: draw from [-pi;pi) (angular noise) and [0,1) (polar or nematic interactions)
     std::uniform_real_distribution<> dis(angle_interval_low, angle_interval_high);
+    std::uniform_real_distribution<> dis2(0, 1);
 
 
 	for (int agent_ind = 0; agent_ind < agent_number; agent_ind++)
 	{
+	    // decide on type of interaction
+	    bool polar_flag = false;
+	    if (dis2(gen) < polar_interact_prob)
+        {
+            polar_flag = true;
+        }
+
+	    // treat all dimensions
 		for (int dim_ind = 0; dim_ind < dim - 1; dim_ind++)
 		{
 			if (dim_ind == 0)
@@ -62,7 +80,16 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 				    interact_neighbor_ind++)
 				{
 					int selected_agent_ind = interacting_neighbors[agent_ind][interact_neighbor_ind];
-					angle_sum += angles[selected_agent_ind][dim_ind];
+
+					if (polar_flag) // polar interaction
+					{
+					    angle_sum += angles[selected_agent_ind][dim_ind];
+                    }
+					else // nematic interaction according to arXiv:1206.3811 eq. 1
+                    {
+                        angle_sum += sgn( cos (angles[agent_ind][dim_ind] - angles[selected_agent_ind][dim_ind]) )
+                                * angles[selected_agent_ind][dim_ind];
+                    }
 
 					//std::cout << "added angle:\t"<< angles[selected_agent_ind][dim_ind]<<
 					//"\nangle_sum:\t" << angle_sum << std::endl;
