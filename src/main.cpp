@@ -13,122 +13,39 @@
 #include"system_init.hpp"
 #include"debugging_tools.hpp"
 #include"subspace_operations.hpp"
-
+#include"io_init.hpp"
 
 // Main
 int main(int argc, char* argv[])
 {
 
-	// Parameter potentially modified by parsing
-      int agent_number;
-      std::string output_path = "../data/";
-      float velocity = 1;
-      float box_size = 100;
-      float noise_strength = 1;
-      float neighborhood_radius = 1;
-      bool pbc = true; // sets periodic boundary conditions
-      float time_total = 130; // total runtime of the simulation
-      float time_step = 1; // smallest timestep for integration of ODEs
-      float timerecord_step = 1; // timestep for recording frames
-      float polar_interact_prob = 1;
-      int dim = 2;
+    // arameters which may be modified through parsing
+    int agent_number;
+    std::string output_path = "../data/";
+    float velocity = 1;
+    float box_size = 100;
+    float noise_strength = 1;
+    float neighborhood_radius = 1;
+    bool pbc = true; // sets periodic boundary conditions
+    float time_total = 130; // total runtime of the simulation
+    float time_step = 1; // smallest timestep for integration of ODEs
+    float polar_interact_prob = 1;
 
-      // Debugging options
-      bool debug = false;
-      int seed = 1996;
+    // not parsable parameters
+    float timerecord_step = 1;
+    int dim = 2;
 
-
-	// Command line parsing handle
-	if (argc < 2 || argc > 11)
-	{
-		std::cerr << "\n\t\t---ERROR---\nCheck number of input arguments.\n\n"
-			"Usage:\n"
-			"\tArg  1: <AGNTNO>\tNumber of agents in the Vicsek model\n"
-			"\tArg  2: <OUTPUT>\tOutput path\n"
-			"\tArg  3: <VELOCY>\tAgent velocity (default: 1)\n"
-			"\tArg  4: <BOXSIZ>\tLength of the quadratic box (default: 100)\n"
-			"\tArg  5: <NOISTR>\tCoefficient of the angular alignment noise (default: 1)\n"
-			"\tArg  6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (default: 1)\n"
-			"\tArg  7: <PERIBC>\tSet periodic boundary conditions (default: true)\n"
-            "\tArg  8: <TIMTOT>\tTotal time of the simulation (default: 100)\n"
-            "\tArg  9: <TIMSTP>\tTime step of the simulation (default: 1)\n"
-            "\tArg 10: <POLPRB>\tProbability of polar interactions with respect to\n\t\tnematic interactions (default: 1 (polar))\n"
-            << std::endl;
-		return 0;
-	}
-	else
-	{
-		if (argc >= 2)
-		{
-			agent_number = atoi(argv[1]);
-		}
-		if (argc >= 3)
-		{
-			output_path = argv[2];
-		}
-		if (argc >= 4)
-		{
-			velocity = atof(argv[3]);
-		}
-		if (argc >= 5)
-		{
-			box_size = atof(argv[4]);
-		}
-		if (argc >= 6)
-		{
-			noise_strength = atof(argv[5]);
-		}
-		if (argc >= 7)
-		{
-			neighborhood_radius = atof(argv[6]);
-		}
-		if (argc >= 8)
-		{
-			pbc = atoi(argv[7]);
-		}
-        if (argc >= 9)
-        {
-            time_total = atof(argv[8]);
-        }
-        if (argc == 10)
-        {
-            time_step = atof(argv[9]);
-        }
-        if (argc == 11)
-        {
-            polar_interact_prob = atof(argv[10]);
-        }
-	}
+    // debugging options
+    bool debug = false;
+    int seed = 1996;
 
 
-	// create output file handle
-	std::string bs = std::string(output_path)
-	    + "out_N_" + std::to_string(agent_number)
-	    + "_v_" + std::to_string(velocity)
-		+ "_L_" + std::to_string(box_size)
-		+ "_eta_" + std::to_string(noise_strength)
-		+ "_r_" + std::to_string(neighborhood_radius)
-		+ "_pbc_" + std::to_string(pbc)
-		+ "_totaltime_" + std::to_string(time_total)
-		+ "_timestep_" + std::to_string(time_step)
-		+ ".txt";
-	const char* filename = bs.c_str();
-	std::ofstream outputfile;
-	outputfile.open(filename, std::ofstream::trunc);
-
-
-    outputfile << "#parameter" << std::endl;
-    outputfile << "dim=" << dim << std::endl;
-    outputfile << "agent_number=" << agent_number << std::endl;
-    outputfile << "velocity=" << velocity << std::endl;
-    outputfile << "box_size=" << box_size << std::endl;
-    outputfile << "noise_strength=" << noise_strength << std::endl;
-    outputfile << "neighborhood_radius=" << neighborhood_radius << std::endl;
-    outputfile << "pbc=" << pbc << std::endl;
-    outputfile << "time_total=" << time_total << std::endl;
-    outputfile << "time_step=" << time_step << std::endl;
-    outputfile << "\n#time\t#agent_index\t#positions (dim columns)\t#angles ((dim-1) columns)"
-               << std::endl;
+    // input / output handling
+    parse_input(argc, argv, agent_number, output_path, velocity, box_size, noise_strength, neighborhood_radius,
+            pbc, time_total, time_step, polar_interact_prob);
+    std::ofstream outputfile;
+    output_init(dim, outputfile, agent_number, output_path, velocity, box_size, noise_strength, neighborhood_radius,
+                pbc, time_total, time_step, polar_interact_prob);
 
 
     // initialize random number generator
