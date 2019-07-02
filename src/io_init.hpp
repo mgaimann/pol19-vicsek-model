@@ -34,7 +34,7 @@ int parse_input(int argc, char* argv[], int& agent_number, std::string& output_p
             box_size = atof(argv[4]);
         }
         if (argc >= 6) {
-            noise_strength = atof(argv[5]);
+            noise_strength = atof(argv[5])/100.0;
         }
         if (argc >= 7) {
             neighborhood_radius = atof(argv[6]);
@@ -70,6 +70,7 @@ void output_init(int dim, std::ofstream& outputfile, int agent_number, std::stri
         + "_pbc_" + std::to_string(pbc)
         + "_totaltime_" + std::to_string(time_total)
         + "_timestep_" + std::to_string(time_step)
+        + "_polar-interact-prob_" + std::to_string(polar_interact_prob)
         + ".txt";
     const char* filename = bs.c_str();
 
