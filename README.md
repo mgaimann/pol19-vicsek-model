@@ -2,7 +2,7 @@
 
 ## A) Getting started
 
-###1. Input Parameters:
+### 1. Input Parameters:
 ```c++
 "\tArg  1: <AGNTNO>\tNumber of agents in the Vicsek model\n"
 "\tArg  2: <OUTPUT>\tOutput path\n"
@@ -20,7 +20,7 @@ Currently, the dimension is hard-coded to 2, and every simulated time step is re
 (may be adapted using the `timerecord_step` parameter).
 
 
-###2. Run Instructions:
+### 2. Run Instructions:
 
 Compile with:
 ```bash
@@ -32,11 +32,11 @@ Run with:
 ```
 For example:
 ```bash
-./main.out 100 "../data/" 1
+./main.out 400 "../data/" 0.03 10 0 1 1 100 1 1
 ```
 
 
-###3. Debugging:
+### 3. Debugging:
 
 Open debugger:
 ```bash
@@ -55,7 +55,7 @@ You may also set `debug=True` for a more verbose output.
 The random number generator seed is fixed and may be modified for debugging purposes.
 
 
-###4. Parameter Sweeping
+### 4. Parameter Sweeping
 
 You may use the provided script `sweep.sh` for a convenient execution of the source code. Moreover, using the script you may perform parameter sweeps over
  - `agent_number`,
@@ -86,13 +86,13 @@ Then, in every time step, we
  * record the information of the current frame
  * based on every agent's position, determine the subspace box the particle lies in and store this information in the `subspace_allocation` container   
  * based on the distance, determine the interactions with other agents. To this end, we
-  * iterate through every subspace box (referred to as the "current box")
-  * iterate through every agent (referred to as the "current agent") in the current box and retrieve the indices of this agent from the `subspace_allocation` container
-  * iterate through every neighboring subspace box of the current box, including the current box itself (in 2D: a 3 x 3 grid) (referred to as the "neighbor box")
-  * iterate through every agent in the neighbor box (referred to as the "neighbor agent") and retrieve the indices of these neighbor agents from the `subspace_allocation` container   
-  * using the indices of current agent and neighbor agent, retrieve the coordinates of both from the `positions` container and compute the distance between them, taking periodic boundaries into account
-  * if `distance` < `neighborhood_radius`, make an entry in the `interacting_neighbors` array for the current agent
+    * iterate through every subspace box (referred to as the "current box")
+    * iterate through every agent (referred to as the "current agent") in the current box and retrieve the indices of this agent from the `subspace_allocation` container
+    * iterate through every neighboring subspace box of the current box, including the current box itself (in 2D: a 3 x 3 grid) (referred to as the "neighbor box")
+    * iterate through every agent in the neighbor box (referred to as the "neighbor agent") and retrieve the indices of these neighbor agents from the `subspace_allocation` container   
+    * using the indices of current agent and neighbor agent, retrieve the coordinates of both from the `positions` container and compute the distance between them, taking periodic boundaries into account
+    * if `distance` < `neighborhood_radius`, make an entry in the `interacting_neighbors` array for the current agent
  * based on the just determined interactions specified in the `interacting_neighbors` container, update the positions and angles of all agents through the integration of the stochastic differential equations
-  * $$\theta_i (t+1) = \langle \theta(t) \rangle_r + \Delta \theta_i$$ (angle) and
-  * $$x_i(t+1) = x_i(t) + v_i(t)\cdot \Delta t$$ (position),
- where $$\langle \theta(t) \rangle_r$$ denotes the average over all agent that are within the neighborhood radius of agent $$i$$.
+    * $$ \theta_i (t+1) = \langle \theta(t) \rangle_r + \Delta \theta_i $$ (angle) and
+    * $$ x_i(t+1) = x_i(t) + v_i(t)\cdot \Delta t $$ (position),
+ where $$ \langle \theta(t) \rangle_r $$ denotes the average over all agent that are within the neighborhood radius of agent $$ i $$.
