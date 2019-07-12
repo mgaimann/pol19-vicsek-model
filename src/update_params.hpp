@@ -73,7 +73,7 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 		{
 			if (dim_ind == 0)
 			{
-			    // summations of sin and cosine components of angles
+			    // summations of sin and cosine components of angles (take mean of circular quantity)
 				float sin_sum = 0;
 				float cos_sum = 0;
 
@@ -91,15 +91,18 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
                     }
 					else // nematic interaction according to arXiv:1206.3811 eq. 1
                     {
-                       // angle_sum += sgn( cos (angles[agent_ind][dim_ind] - angles[selected_agent_ind][dim_ind]) )
-                         //       * angles[selected_agent_ind][dim_ind];
+                        sin_sum += sgn( cos (angles[agent_ind][dim_ind] - angles[selected_agent_ind][dim_ind]) ) *
+                                sin(angles[selected_agent_ind][dim_ind]);
+                        cos_sum += sgn( cos (angles[agent_ind][dim_ind] - angles[selected_agent_ind][dim_ind]) ) *
+                                cos(angles[selected_agent_ind][dim_ind]);
                     }
-
-					//std::cout << "added angle:\t"<< angles[selected_agent_ind][dim_ind]<<
-					//"\nangle_sum:\t" << angle_sum << std::endl;
 				}
 
-				// treat periodicity of arctan
+				// average
+				sin_sum /= interacting_neighbors[agent_ind].size();
+                cos_sum /= interacting_neighbors[agent_ind].size();
+
+                // treat periodicity of arctan
 				// angle within -pi/2,pi/2
 				if (cos_sum >= 0)
 				{
@@ -120,7 +123,6 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 				{
 					angles[agent_ind][dim_ind] += 2 * atan(1) * 4;
 				}
-
 			}
 		}
 	}
