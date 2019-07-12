@@ -73,9 +73,12 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 		{
 			if (dim_ind == 0)
 			{
-				float angle_sum = 0;
+			    // summations of sin and cosine components of angles
+				float sin_sum = 0;
+				float cos_sum = 0;
 
-				//stochastic differential equation
+				// integration of the stochastic differential equations
+				// angular update: following the original Vicsek paper
 				for (int interact_neighbor_ind = 0; interact_neighbor_ind < interacting_neighbors[agent_ind].size();
 				    interact_neighbor_ind++)
 				{
@@ -83,22 +86,32 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 
 					if (polar_flag) // polar interaction
 					{
-					    angle_sum += angles[selected_agent_ind][dim_ind];
+					    sin_sum += sin(angles[selected_agent_ind][dim_ind]);
+                        cos_sum += cos(angles[selected_agent_ind][dim_ind]);
                     }
 					else // nematic interaction according to arXiv:1206.3811 eq. 1
                     {
-                        angle_sum += sgn( cos (angles[agent_ind][dim_ind] - angles[selected_agent_ind][dim_ind]) )
-                                * angles[selected_agent_ind][dim_ind];
+                       // angle_sum += sgn( cos (angles[agent_ind][dim_ind] - angles[selected_agent_ind][dim_ind]) )
+                         //       * angles[selected_agent_ind][dim_ind];
                     }
 
 					//std::cout << "added angle:\t"<< angles[selected_agent_ind][dim_ind]<<
 					//"\nangle_sum:\t" << angle_sum << std::endl;
 				}
 
-				float mean_angle = angle_sum / interacting_neighbors[agent_ind].size();
-				angles[agent_ind][dim_ind] = mean_angle + noise_strength * dis(gen);
+				// treat periodicity of arctan
+				// angle within -pi/2,pi/2
+				if (cos_sum >= 0)
+				{
+                    angles[agent_ind][dim_ind] = atan2(sin_sum,cos_sum) + noise_strength * dis(gen);
+                }
+				else // angle within pi/2, 3pi/2 => add pi
+                {
+                    angles[agent_ind][dim_ind] = atan2(sin_sum,cos_sum) + atan(1) * 4 + noise_strength * dis(gen);
+                }
 
-				// pbc, put angles into [-pi,pi)
+
+				// pbc, put angles into [-pi,pi) by subtracting or adding 2pi
 				if (angles[agent_ind][dim_ind] > angle_interval_high)
 				{ 
 					angles[agent_ind][dim_ind] -= 2 * atan(1) * 4;
