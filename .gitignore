@@ -9,3 +9,4 @@
 /src/.idea/
 /data/
 /src/.ipynb_checkpoints/
+*.swp
