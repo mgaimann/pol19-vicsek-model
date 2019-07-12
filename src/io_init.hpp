@@ -34,7 +34,7 @@ int parse_input(int argc, char* argv[], int& agent_number, std::string& output_p
             box_size = atof(argv[4]);
         }
         if (argc >= 6) {
-            noise_strength = atof(argv[5])/100.0;
+            noise_strength = atof(argv[5]);
         }
         if (argc >= 7) {
             neighborhood_radius = atof(argv[6]);
