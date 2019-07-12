@@ -23,11 +23,11 @@ int main(int argc, char* argv[])
     int agent_number;
     std::string output_path = "../data/";
     float velocity = 1;
-    float box_size = 100;
+    float box_size = 10;
     float noise_strength = 1;
     float neighborhood_radius = 1;
     bool pbc = true; // sets periodic boundary conditions
-    float time_total = 130; // total runtime of the simulation
+    float time_total = 100; // total runtime of the simulation
     float time_step = 1; // smallest timestep for integration of ODEs
     float polar_interact_prob = 1;
 
@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
             get_subspace_cell_neighbors(pbc, subspacing_number, dim, debug);
 
 
-	// loop over time interval
+    // loop over time interval
 	for (float time = 0; time < time_total; time += time_step)
 	{
 		// record frame if condition is met  
@@ -94,18 +94,20 @@ int main(int argc, char* argv[])
         allocate_to_subspace(
             subspace_allocation, neighborhood_radius, agent_number, positions);
 
+
         // determine which agents interact with each other
         std::vector<std::vector<int> > interacting_neighbors = get_interacting_neighbors(
                 subspace_cell_neighbors, subspace_allocation,
                 expected_agentnumber_per_subspace, subspacing_number, dim,
                 neighborhood_radius, positions, agent_number, box_size, pbc, debug);
 
+
         // update direction, velocity and position
         angles = update_angles(agent_number, dim, angles, noise_strength, interacting_neighbors,
                                angle_interval_low, angle_interval_high, gen, polar_interact_prob);
 
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
-	}
+    }
 
     outputfile.close();
     //printf("Moin");

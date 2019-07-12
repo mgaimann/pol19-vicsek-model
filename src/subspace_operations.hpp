@@ -1,6 +1,3 @@
-// TODO: for possible speed improvements, rescale vector with
-// TODO: expected agents per subspace cell
-
 
 // initialisation/reset of subspace container
 std::vector<std::vector<std::vector<int> > > subspace_init(
@@ -46,7 +43,7 @@ std::vector < std::vector < std::vector < std::vector<int> > > > get_subspace_ce
     std::vector < std::vector < std::vector < std::vector < int > > > > subspace_cell_neighbors(
             subspacing_number, std::vector < std::vector < std::vector < int > > >(
                     subspacing_number, std::vector< std::vector< int> >(
-                            std::pow(subspacing_number, 2), std::vector <int>(dim)
+                            std::pow(dim+1, 2), std::vector <int>(dim)
                     )
             )
     );
