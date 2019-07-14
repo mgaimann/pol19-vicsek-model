@@ -8,6 +8,7 @@
 #include <sstream>
 #include <algorithm>
 #include <chrono>
+#include <complex>
 #include"record_frame.hpp"
 #include"update_params.hpp"
 #include"system_init.hpp"
@@ -22,9 +23,9 @@ int main(int argc, char* argv[])
     // arameters which may be modified through parsing
     int agent_number;
     std::string output_path = "../data/";
-    float velocity = 1;
+    float velocity = 0.03;
     float box_size = 10;
-    float noise_strength = 1;
+    float noise_strength = 0.1;
     float neighborhood_radius = 1;
     bool pbc = true; // sets periodic boundary conditions
     float time_total = 100; // total runtime of the simulation

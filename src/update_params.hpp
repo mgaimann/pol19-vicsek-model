@@ -76,9 +76,9 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 		{
 			if (dim_ind == 0)
 			{
-			    // summations of sin and cosine components of angles (take mean of circular quantity)
-				float sin_sum = 0;
-				float cos_sum = 0;
+			    // summation of complex exponentials exp(i*theta) (take mean of circular quantity)
+				const std::complex<float> i(0,1);
+			    std::complex<float> exp_sum = 0;
 
 				// integration of the stochastic differential equations
 				// angular update: following the original Vicsek paper
@@ -86,38 +86,24 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 				    interact_neighbor_ind++)
 				{
 					int selected_agent_ind = interacting_neighbors[agent_ind][interact_neighbor_ind];
+                    std::complex<float> agent_angle( angles[selected_agent_ind][dim_ind] ,0);
 
-					if (polar_flag) // polar interaction
+                    if (polar_flag) // polar interaction
 					{
-					    sin_sum += sin(angles[selected_agent_ind][dim_ind]);
-                        cos_sum += cos(angles[selected_agent_ind][dim_ind]);
+					    exp_sum += std::exp(i * agent_angle);
                     }
 					else // nematic interaction according to arXiv:1206.3811 eq. 1
                     {
-                        sin_sum += sgn( cos (angles[agent_ind][dim_ind] - angles[selected_agent_ind][dim_ind]) ) *
-                                sin(angles[selected_agent_ind][dim_ind]);
-                        cos_sum += sgn( cos (angles[agent_ind][dim_ind] - angles[selected_agent_ind][dim_ind]) ) *
-                                cos(angles[selected_agent_ind][dim_ind]);
+                        std::complex<float> nematic_coeff( sgn( cos (angles[agent_ind][dim_ind] -
+                        angles[selected_agent_ind][dim_ind])), 0);
+					    exp_sum +=  std::exp(i * nematic_coeff* agent_angle);
                     }
 				}
-
-				// average
-				sin_sum /= interacting_neighbors[agent_ind].size();
-                cos_sum /= interacting_neighbors[agent_ind].size();
-
-                // treat periodicity of arctan
-				// angle within -pi/2,pi/2
-				if (cos_sum >= 0)
-				{
-                    angles[agent_ind][dim_ind] = atan2(sin_sum,cos_sum) + noise_strength * dis(gen);
-                }
-				else // angle within pi/2, 3pi/2 => add pi
-                {
-                    angles[agent_ind][dim_ind] = atan2(sin_sum,cos_sum) + atan(1) * 4 + noise_strength * dis(gen);
-                }
+				// obtain argument of complex exponential and add noise
+                angles[agent_ind][dim_ind] = static_cast<float>(std::arg(exp_sum)) + noise_strength * dis(gen);
 
 
-				// pbc, put angles into [-pi,pi) by subtracting or adding 2pi
+                // pbc, put angles into [-pi,pi) by subtracting or adding 2pi
 				if (angles[agent_ind][dim_ind] > angle_interval_high)
 				{ 
 					angles[agent_ind][dim_ind] -= 2 * atan(1) * 4;
