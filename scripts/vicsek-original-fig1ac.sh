@@ -21,8 +21,8 @@ agent_number_low="300"
 agent_number_high="300"
 agent_number_step="1"
 
-noise_strength_low="2.0";
-noise_strength_high="2.0"
+noise_strength_low="0.32";
+noise_strength_high="0.32"
 noise_strength_step="0.02"
 
 # Work around floating point math
