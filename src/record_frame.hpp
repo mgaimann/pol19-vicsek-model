@@ -1,7 +1,7 @@
 void record_frame(std::ofstream& outputfile, int agent_number,
-    float time_step, float timerecord_step, float time,  int dim,
-    std::vector<std::vector<float> > positions,
-    std::vector<std::vector<float> > angles)
+    double time_step, double timerecord_step, double time,  int dim,
+    std::vector<std::vector<double> > positions,
+    std::vector<std::vector<double> > angles)
 {
     
     // consider frames to use modulo operation for recording decision

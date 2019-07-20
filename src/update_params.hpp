@@ -5,8 +5,8 @@ template <typename T> int sgn(T val) {
 
 
 // updates the positions of all agents from time t to t+1
-void update_positions(int agent_number, int dim, std::vector<std::vector<float> > &positions,
-	std::vector<std::vector<float> > angles, float velocity, float time_step, float box_size)
+void update_positions(int agent_number, int dim, std::vector<std::vector<double> > &positions,
+	std::vector<std::vector<double> > angles, double velocity, double time_step, double box_size)
 {
     // 2D hard-coded: consider only one angular dimension
     int dim_angle_ind = 0;
@@ -52,9 +52,9 @@ void update_positions(int agent_number, int dim, std::vector<std::vector<float> 
 
 
 // updates the angles of all agents from time t to t+1
-std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::vector<std::vector<float> > angles,
-	float noise_strength, std::vector<std::vector<int> > interacting_neighbors, float angle_interval_low,
-	float angle_interval_high, std::mt19937& gen, float polar_interact_prob)
+std::vector<std::vector<double> > update_angles(int agent_number, int dim, std::vector<std::vector<double> > angles,
+	double noise_strength, std::vector<std::vector<int> > interacting_neighbors, double angle_interval_low,
+	double angle_interval_high, std::mt19937& gen, double polar_interact_prob)
 {
 
 	// RNG: draw from [-pi;pi) (angular noise) and [0,1) (polar or nematic interactions)
@@ -77,8 +77,8 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 			if (dim_ind == 0)
 			{
 			    // summation of complex exponentials exp(i*theta) (take mean of circular quantity)
-				const std::complex<float> i(0,1);
-			    std::complex<float> exp_sum = 0;
+				const std::complex<double> i(0,1);
+			    std::complex<double> exp_sum = 0;
 
 				// integration of the stochastic differential equations
 				// angular update: following the original Vicsek paper
@@ -86,7 +86,7 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
 				    interact_neighbor_ind++)
 				{
 					int selected_agent_ind = interacting_neighbors[agent_ind][interact_neighbor_ind];
-                    std::complex<float> agent_angle( angles[selected_agent_ind][dim_ind] ,0);
+                    std::complex<double> agent_angle( angles[selected_agent_ind][dim_ind] ,0);
 
                     if (polar_flag) // polar interaction
 					{
@@ -94,13 +94,13 @@ std::vector<std::vector<float> > update_angles(int agent_number, int dim, std::v
                     }
 					else // nematic interaction according to arXiv:1206.3811 eq. 1
                     {
-                        std::complex<float> nematic_coeff( sgn( cos (angles[agent_ind][dim_ind] -
+                        std::complex<double> nematic_coeff( sgn( cos (angles[agent_ind][dim_ind] -
                         angles[selected_agent_ind][dim_ind])), 0);
 					    exp_sum +=  std::exp(i * nematic_coeff* agent_angle);
                     }
 				}
 				// obtain argument of complex exponential and add noise
-                angles[agent_ind][dim_ind] = static_cast<float>(std::arg(exp_sum)) + noise_strength * dis(gen);
+                angles[agent_ind][dim_ind] = static_cast<double>(std::arg(exp_sum)) + noise_strength * dis(gen);
 
 
                 // pbc, put angles into [-pi,pi) by subtracting or adding 2pi

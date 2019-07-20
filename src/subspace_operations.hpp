@@ -17,8 +17,8 @@ std::vector<std::vector<std::vector<int> > > subspace_init(
 // allocate agent_indices to subspaces
 void allocate_to_subspace(
         std::vector<std::vector<std::vector<int> > > &subspace_allocation, // pass by ref
-        float neighborhood_radius, int agent_number,
-        std::vector<std::vector<float> > positions)
+        double neighborhood_radius, int agent_number,
+        std::vector<std::vector<double> > positions, bool debug)
 {
   // allocate all agents to subboxes
   for (int agent_ind = 0; agent_ind < agent_number; agent_ind++)
@@ -122,8 +122,8 @@ std::vector<std::vector<int> > get_interacting_neighbors(
         std::vector < std::vector < std::vector < std::vector<int> > > > subspace_cell_neighbors,
         std::vector<std::vector<std::vector<int> > > subspace_allocation,
         int expected_agentnumber_per_subspace, int subspacing_number, int dim,
-        float neighborhood_radius, std::vector<std::vector<float> > positions,
-        int agent_number, float box_size, bool pbc, bool debug
+        double neighborhood_radius, std::vector<std::vector<double> > positions,
+        int agent_number, double box_size, bool pbc, bool debug
         )
 {
     // initialize interaction container
@@ -173,8 +173,8 @@ std::vector<std::vector<int> > get_interacting_neighbors(
 
 
                         // compute distance between subsp_agent and subsp_neighbor_agent (2D hardcoded)
-                        float xdistance = fabs(positions[nb_agent_ind][0] - positions[agent_ind][0]);
-                        float ydistance = fabs(positions[nb_agent_ind][1] - positions[agent_ind][1]);
+                        double xdistance = fabs(positions[nb_agent_ind][0] - positions[agent_ind][0]);
+                        double ydistance = fabs(positions[nb_agent_ind][1] - positions[agent_ind][1]);
 
                         // treat pbcs (hardcoded)
                         if (xdistance > (box_size/2) && pbc)
@@ -187,7 +187,7 @@ std::vector<std::vector<int> > get_interacting_neighbors(
                         }
 
                         // compute actual distance
-                        float distance = sqrt( std::pow( xdistance, 2 ) + std::pow( ydistance, 2 ) );
+                        double distance = sqrt( std::pow( xdistance, 2 ) + std::pow( ydistance, 2 ) );
 
                         // decide on interaction between these two agents based on neighborhood_radius
                         if (distance <= neighborhood_radius)

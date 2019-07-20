@@ -23,17 +23,17 @@ int main(int argc, char* argv[])
     // arameters which may be modified through parsing
     int agent_number;
     std::string output_path = "../data/";
-    float velocity = 0.03;
-    float box_size = 10;
-    float noise_strength = 0.1;
-    float neighborhood_radius = 1;
+    double velocity = 0.03;
+    double box_size = 10;
+    double noise_strength = 0.1;
+    double neighborhood_radius = 1;
     bool pbc = true; // sets periodic boundary conditions
-    float time_total = 100; // total runtime of the simulation
-    float time_step = 1; // smallest timestep for integration of ODEs
-    float polar_interact_prob = 1;
+    double time_total = 100; // total runtime of the simulation
+    double time_step = 1; // smallest timestep for integration of ODEs
+    double polar_interact_prob = 1;
 
     // not parsable parameters
-    float timerecord_step = 1;
+    double timerecord_step = 1;
     int dim = 2;
 
     // debugging options
@@ -56,14 +56,15 @@ int main(int argc, char* argv[])
 
 
     // define angle interval, here: [-pi, pi)
-    float angle_interval_low = - atan(1) * 4;
-    float angle_interval_high = atan(1) * 4;
+    // changing this might cause issues in the update_angles function
+    double angle_interval_low = - atan(1) * 4;
+    double angle_interval_high = atan(1) * 4;
 
 
 	// allocate random positions and angles
-	std::vector<std::vector<float> > positions = positions_init(
+	std::vector<std::vector<double> > positions = positions_init(
 		agent_number, box_size, dim, gen);
-	std::vector<std::vector<float> > angles = angles_init(
+	std::vector<std::vector<double> > angles = angles_init(
 		agent_number, box_size, dim, angle_interval_low, angle_interval_high, gen);
 
 
@@ -81,7 +82,7 @@ int main(int argc, char* argv[])
 
 
     // loop over time interval
-	for (float time = 0; time < time_total; time += time_step)
+	for (double time = 0; time < time_total; time += time_step)
 	{
 		// record frame if condition is met  
 		record_frame(outputfile, agent_number, time_step,
@@ -93,7 +94,7 @@ int main(int argc, char* argv[])
 
         // allocate agents to subspaces
         allocate_to_subspace(
-            subspace_allocation, neighborhood_radius, agent_number, positions);
+            subspace_allocation, neighborhood_radius, agent_number, positions, debug);
 
 
         // determine which agents interact with each other
@@ -108,8 +109,13 @@ int main(int argc, char* argv[])
                                angle_interval_low, angle_interval_high, gen, polar_interact_prob);
 
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
+
+        //std::cout << "time: " << time << std::endl;
     }
 
+    // record last frame
+    record_frame(outputfile, agent_number, time_step,
+                 timerecord_step, time_total, dim, positions, angles);
+
     outputfile.close();
-    //printf("Moin");
 }

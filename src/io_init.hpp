@@ -1,7 +1,7 @@
 // Command line parsing handle
-int parse_input(int argc, char* argv[], int& agent_number, std::string& output_path, float& velocity, float& box_size,
-        float& noise_strength, float& neighborhood_radius, bool& pbc, float& time_total, float& time_step,
-        float& polar_interact_prob)
+int parse_input(int argc, char* argv[], int& agent_number, std::string& output_path, double& velocity, double& box_size,
+        double& noise_strength, double& neighborhood_radius, bool& pbc, double& time_total, double& time_step,
+        double& polar_interact_prob)
 
 {
     if (argc < 2 || argc > 11) {
@@ -57,9 +57,9 @@ int parse_input(int argc, char* argv[], int& agent_number, std::string& output_p
 
 
 // create output file handle
-void output_init(int dim, std::ofstream& outputfile, int agent_number, std::string output_path, float velocity, float box_size,
-                 float noise_strength, float neighborhood_radius, bool pbc, float time_total, float time_step,
-                 float polar_interact_prob){
+void output_init(int dim, std::ofstream& outputfile, int agent_number, std::string output_path, double velocity, double box_size,
+                 double noise_strength, double neighborhood_radius, bool pbc, double time_total, double time_step,
+                 double polar_interact_prob){
 
     std::string bs = std::string(output_path)
         + "out_N_" + std::to_string(agent_number)

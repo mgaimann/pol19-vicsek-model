@@ -1,4 +1,4 @@
-void print(std::vector<std::vector<float> > const& input, int agent_number, int dim)
+void print(std::vector<std::vector<double> > const& input, int agent_number, int dim)
 {
 	for (int i = 0; i < agent_number; i++)
 	{
