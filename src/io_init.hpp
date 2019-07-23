@@ -1,4 +1,4 @@
-// Command line parsing handle
+// command line parsing handle
 int parse_input(int argc, char* argv[], int& agent_number, std::string& output_path, double& velocity, double& box_size,
         double& noise_strength, double& neighborhood_radius, bool& pbc, double& time_total, double& time_step,
         double& polar_interact_prob)
@@ -7,16 +7,16 @@ int parse_input(int argc, char* argv[], int& agent_number, std::string& output_p
     if (argc < 2 || argc > 11) {
         std::cerr << "\n\t\t---ERROR---\nCheck number of input arguments.\n\n"
          "Usage:\n"
-         "\tArg  1: <AGNTNO>\tNumber of agents in the Vicsek model\n"
-         "\tArg  2: <OUTPUT>\tOutput path\n"
-         "\tArg  3: <VELOCY>\tAgent velocity (default: 1)\n"
-         "\tArg  4: <BOXSIZ>\tLength of the quadratic box (default: 100)\n"
-         "\tArg  5: <NOISTR>\tCoefficient of the angular alignment noise (default: 1)\n"
-         "\tArg  6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (default: 1)\n"
-         "\tArg  7: <PERIBC>\tSet periodic boundary conditions (default: true)\n"
-         "\tArg  8: <TIMTOT>\tTotal time of the simulation (default: 100)\n"
-         "\tArg  9: <TIMSTP>\tTime step of the simulation (default: 1)\n"
-         "\tArg 10: <POLPRB>\tProbability of polar interactions with respect to\n\t\tnematic interactions (default: 1 (polar))\n"
+         "\tArg  1: <AGNTNO>\tNumber of agents in the Vicsek model (integer)\n"
+         "\tArg  2: <OUTPUT>\tOutput path (string, default: \"../data/\")\n"
+         "\tArg  3: <VELOCY>\tAgent velocity (double, default: 0.5)\n"
+         "\tArg  4: <BOXSIZ>\tLength of the quadratic box (integer, default: 10)\n"
+         "\tArg  5: <NOISTR>\tCoefficient of the angular alignment noise (double, default: 0.1)\n"
+         "\tArg  6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (double, default: 1)\n"
+         "\tArg  7: <PERIBC>\tSet periodic boundary conditions (boolean, default: true)\n"
+         "\tArg  8: <TIMTOT>\tTotal time of the simulation (double, default: 100)\n"
+         "\tArg  9: <TIMSTP>\tTime step of the simulation (double, default: 1)\n"
+         "\tArg 10: <POLPRB>\tProbability of polar interactions with respect to\n\t\tnematic interactions (double, default: 1 (polar))\n"
          << std::endl;
         return 0;
 
