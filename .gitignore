@@ -5,8 +5,7 @@
 *.obj
 /src/.vs/
 *.md.swp
-/.idea/
-/src/.idea/
+*.idea/
 /data/
-/src/.ipynb_checkpoints/
+*.ipynb_checkpoints/
 *.swp
