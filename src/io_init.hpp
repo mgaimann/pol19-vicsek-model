@@ -11,12 +11,12 @@ int parse_input(int argc, char* argv[], int& agent_number, std::string& output_p
          "\tArg  2: <OUTPUT>\tOutput path (string, default: \"../data/\")\n"
          "\tArg  3: <VELOCY>\tAgent velocity (double, default: 0.5)\n"
          "\tArg  4: <BOXSIZ>\tLength of the quadratic box (integer, default: 10)\n"
-         "\tArg  5: <NOISTR>\tCoefficient of the angular alignment noise (double, default: 0.1)\n"
-         "\tArg  6: <RADIUS>\tNeighborhood radius around agent in which\n\t\tangular orientations are averaged (double, default: 1)\n"
+         "\tArg  5: <NOISTR>\tCoefficient of the angular alignment noise\n\t\t\t\t(double, default: 0.1)\n"
+         "\tArg  6: <RADIUS>\tNeighborhood radius around agent in which angular\n\t\t\t\torientations are averaged (double, default: 1)\n"
          "\tArg  7: <PERIBC>\tSet periodic boundary conditions (boolean, default: true)\n"
          "\tArg  8: <TIMTOT>\tTotal time of the simulation (double, default: 100)\n"
          "\tArg  9: <TIMSTP>\tTime step of the simulation (double, default: 1)\n"
-         "\tArg 10: <POLPRB>\tProbability of polar interactions with respect to\n\t\tnematic interactions (double, default: 1 (polar))\n"
+         "\tArg 10: <POLPRB>\tProbability of polar interactions with respect to\n\t\t\t\tnematic interactions (double, default: 1 (polar))\n"
          << std::endl;
         return 0;
 
