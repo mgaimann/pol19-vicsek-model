@@ -4,7 +4,7 @@
 execfile="../src/main.out"
 
 # Set constants
-output_path="../data/vicsek-original-fig1ac/"
+output_path="../data/ngo-fig2e-rescaled/"
 velocity="0.5"
 neighborhood_radius="1"
 pbc="1"
