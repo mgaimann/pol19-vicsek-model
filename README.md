@@ -1,8 +1,22 @@
 # Active Matter Simulations: The Vicsek Model
+(C) 2019 Mario U. Gaimann, Monique Honsa, and Jongseo Kim
+Supervisor: Timo Krüger
+
+Ludwig-Maximilians University Munich, Germany
+Faculty of Physics
+Physics of Life Lecture (Prof. Dr. Erwin Frey)
 
 
 
-## B) Getting started
+## A) Project Structure
+Our repository consists of the following folders:
+- `documentation`: written report and material about this project
+- `data`: blank folder for output data
+- `eval`: contains evaluation scrips for generating movies and plots
+- `scripts`: scripts for parameter sweeps
+- `src`: contains source files which need to be compiled
+
+## B) Getting Started
 
 ### 1. Compilation of the C++ Code
 
@@ -28,8 +42,7 @@ The input arguments are specified in the following:
 "\tArg  2: <OUTPUT>\tOutput path (string, default: \"../data/\")\n"
 "\tArg  3: <VELOCY>\tAgent velocity (double, default: 0.5)\n"
 "\tArg  4: <BOXSIZ>\tLength of the quadratic box (integer, default: 10)\n"
-"\tArg  5: <NOISTR>\tCoefficient of the angular alignment noise
-(double, default: 0.1)\n"
+"\tArg  5: <NOISTR>\tCoefficient of the angular alignment noise (double, default: 0.1)\n"
 "\tArg  6: <RADIUS>\tNeighborhood radius around agent in which angular
 orientations are averaged (double, default: 1)\n"
 "\tArg  7: <PERIBC>\tSet periodic boundary conditions (boolean, default: true)\n"
@@ -66,7 +79,7 @@ system equilibration), if you want to "discard" the first 30 time steps, set thi
  - a file containing evaluated physical quantities (such as order parameters), based on the variation of control parameters in the various files. The folder name in which your `*.txt` output files are located will be the name of this file.
 
 
-### 3. Debugging
+### 5. Debugging
 
 Open debugger:
 ```bash
@@ -85,7 +98,7 @@ You may also set `debug=True` for a more verbose output.
 The random number generator seed is fixed and may be modified for debugging purposes.
 
 
-## C) Source code structure
+## C) Source Code Structure
 
 The central `main.cpp` file includes several `.hpp` files:
  * `io_init.hpp`: Setting default parameters, handling input parsing from the command line, creating output file and printing input parameter into output file
