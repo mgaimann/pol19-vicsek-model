@@ -20,25 +20,25 @@
 int main(int argc, char* argv[])
 {
 
-    // arameters which may be modified through parsing
-    int agent_number;
-    std::string output_path = "../data/";
-    double velocity = 0.03;
-    double box_size = 10;
-    double noise_strength = 0.1;
-    double neighborhood_radius = 1;
-    bool pbc = true; // sets periodic boundary conditions
-    double time_total = 100; // total runtime of the simulation
-    double time_step = 1; // smallest timestep for integration of ODEs
-    double polar_interact_prob = 1;
+    // parameters which may be modified through parsing
+    int agent_number;                     // number of microscopic agents in the simulation
+    std::string output_path = "../data/"; // for generation of output
+    double velocity = 0.5;                // constant velocity of agents
+    double box_size = 10;                 // system size
+    double noise_strength = 0.1;          // tunes stochasticity of interaction
+    double neighborhood_radius = 1;       // interaction radius around every agent
+    bool pbc = true;                      // sets periodic boundary conditions
+    double time_total = 100;              // total runtime of the simulation
+    double time_step = 1;                 // smallest time step for integration of ODEs
+    double polar_interact_prob = 1;       // probability of polar versus nematic behaviour
 
     // not parsable parameters
-    double timerecord_step = 1;
-    int dim = 2;
+    double timerecord_step = 1;           // time step which is recorded
+    int dim = 2;                          // dimension of the system, hard-coded, do not change!
 
     // debugging options
-    bool debug = false;
-    int seed = 1996;
+    bool debug = false;                   // debugging option for more verbose output
+    int seed = 1996;                      // seed for random number generator
 
 
     // input / output handling
@@ -109,8 +109,6 @@ int main(int argc, char* argv[])
                                angle_interval_low, angle_interval_high, gen, polar_interact_prob);
 
         update_positions(agent_number, dim, positions, angles, velocity, time_step, box_size);
-
-        //std::cout << "time: " << time << std::endl;
     }
 
     // record last frame
