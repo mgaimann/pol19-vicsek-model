@@ -1,12 +1,11 @@
 # Active Matter Simulations: The Vicsek Model
-(C) 2019 Mario U. Gaimann, Monique Honsa, and Jongseo Kim
-Supervisor: Timo Krüger
+_(C) 2019 Mario U. Gaimann, Monique Honsa, and Jongseo Kim_
 
-Ludwig-Maximilians University Munich, Germany
-Faculty of Physics
+Ludwig-Maximilians University Munich, Germany  
+Faculty of Physics  
 Physics of Life Lecture (Prof. Dr. Erwin Frey)
-
-
+Supervisor: Timo Krüger 
+https://www.physik.uni-muenchen.de/lehre/vorlesungen/sose_19/physics_of_life/index.html  
 
 ## A) Project Structure
 Our repository consists of the following folders:
@@ -14,7 +13,7 @@ Our repository consists of the following folders:
 - `data`: blank folder for output data
 - `eval`: contains evaluation scrips for generating movies and plots
 - `scripts`: scripts for parameter sweeps
-- `src`: contains source files which need to be compiled
+- `src`: contains source files which need to be compiled  
 
 ## B) Getting Started
 
@@ -22,7 +21,7 @@ Our repository consists of the following folders:
 
 Compile with:
 ```bash
-g++ main.cpp -std=c++11 -o "main.out" -O2
+g++ main.cpp -std=c++11 -o "main.out" -O2  
 ```
 
 
@@ -53,7 +52,7 @@ nematic interactions (double, default: 1 (polar))\n"
 ```
 
 Currently, the dimension is hard-coded to 2, and every simulated time step is recorded
-(may be adapted using the `timerecord_step` parameter).
+(may be adapted using the `timerecord_step` parameter).  
 
 
 ### 3. Parameter Sweeping
@@ -62,7 +61,7 @@ You may use the provided script `sweep.sh` for a convenient execution of the sou
  - `agent_number`,
  - `box_size` and
  - `noise_strength`.
-It can be easily adapted to sweep over further parameters, such as `polar_interact_prob`.
+It can be easily adapted to sweep over further parameters, such as `polar_interact_prob`.  
 
 
 ### 4. Evaluation: Using the Jupyter Notebook
@@ -76,7 +75,7 @@ It can be easily adapted to sweep over further parameters, such as `polar_intera
  - `burnin_start`: specify a burn-in time which will not be considered in the evaluation (e.g. due to
 system equilibration), if you want to "discard" the first 30 time steps, set this variable to 30
  - a video of the active matter trajectory for every output file and
- - a file containing evaluated physical quantities (such as order parameters), based on the variation of control parameters in the various files. The folder name in which your `*.txt` output files are located will be the name of this file.
+ - a file containing evaluated physical quantities (such as order parameters), based on the variation of control parameters in the various files. The folder name in which your `*.txt` output files are located will be the name of this file.  
 
 
 ### 5. Debugging
@@ -95,7 +94,7 @@ run [args]
 ```
 
 You may also set `debug=True` for a more verbose output.
-The random number generator seed is fixed and may be modified for debugging purposes.
+The random number generator seed is fixed and may be modified for debugging purposes.  
 
 
 ## C) Source Code Structure
@@ -105,16 +104,16 @@ The central `main.cpp` file includes several `.hpp` files:
  * `system_init.hpp`: Initializing internal `angles` and `positions` containers
  * `record_frame.hpp`: Printing information from the current frame into the output file
  * `subspace_operations.hpp`: Deals with everything concerned with introducing the subspace grid that serves to improves computational speed. Allocating agents to subspaces, finding neighboring subspace cells taking periodic boundaries into account, determining interactions between agents.
- * `update_params.hpp`: Updating the `angles` and `positions` containers based on polar or nematic interaction rules.
+ * `update_params.hpp`: Updating the `angles` and `positions` containers based on polar or nematic interaction rules.  
 
 
 
 ## D) Algorithm
 
-The `main.cpp` code makes use of a computing scheme that introduces a subspace consisting of cells or boxes. This leads to a reduction in time complexity from O(N^2) to O(N) and allows the study of large systems.
-The algorithm works as follows:
+The `main.cpp` code makes use of a computing scheme that introduces a subspace consisting of cells or boxes. This leads to a reduction in time complexity from O(N^2) to O(N) and allows the study of large systems.  
+The algorithm works as follows:  
 
-Initially, a (uniformly) random position and a (uniformly) random angle is allocated to every agent. Every agent is uniquely identified by an index. Positional and angular information is stored in `angles` and `positions` containers and may be retrieved and manipulated using this index.
+Initially, a (uniformly) random position and a (uniformly) random angle is allocated to every agent. Every agent is uniquely identified by an index. Positional and angular information is stored in `angles` and `positions` containers and may be retrieved and manipulated using this index.  
 
 Then, in every time step, we
  * record the information of the current frame
@@ -126,4 +125,4 @@ Then, in every time step, we
     * iterate through every agent in the neighbor box (referred to as the "neighbor agent") and retrieve the indices of these neighbor agents from the `subspace_allocation` container   
     * using the indices of current agent and neighbor agent, retrieve the coordinates of both from the `positions` container and compute the distance between them, taking periodic boundaries into account
     * if `distance` < `neighborhood_radius`, make an entry in the `interacting_neighbors` array for the current agent
- * based on the just determined interactions specified in the `interacting_neighbors` container, update the positions and angles of all agents through the integration of the stochastic differential equations.
+ * based on the just determined interactions specified in the `interacting_neighbors` container, update the positions and angles of all agents through the integration of the stochastic differential equations.  
