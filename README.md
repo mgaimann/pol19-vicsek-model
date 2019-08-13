@@ -1,11 +1,13 @@
 # Active Matter Simulations: The Vicsek Model
 _(C) 2019 Mario U. Gaimann, Monique Honsa, and Jongseo Kim_
-
+  
 Ludwig-Maximilians-Universität München, Munich, Germany  
 Faculty of Physics  
-Physics of Life Lecture (Prof. Dr. Erwin Frey)
+  
+Physics of Life Lecture (Prof. Dr. Erwin Frey)  
 Supervisor: Timo Krüger  
-https://www.physik.uni-muenchen.de/lehre/vorlesungen/sose_19/physics_of_life/index.html
+https://www.physik.uni-muenchen.de/lehre/vorlesungen/sose_19/physics_of_life/index.html  
+  
 Access to the written report:  
 The password is the year of the original Vicsek model publication  
 
