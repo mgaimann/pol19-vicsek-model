@@ -14,6 +14,7 @@ Our repository consists of the following folders:
 - `eval`: contains evaluation scrips for generating movies and plots
 - `scripts`: scripts for parameter sweeps
 - `src`: contains source files which need to be compiled  
+- `supp`: contains supplementary materials (movies)
 
 ## B) Getting Started
 
