@@ -1,11 +1,13 @@
 # Active Matter Simulations: The Vicsek Model
 _(C) 2019 Mario U. Gaimann, Monique Honsa, and Jongseo Kim_
 
-Ludwig-Maximilians University Munich, Germany  
+Ludwig-Maximilians-Universität München, Munich, Germany  
 Faculty of Physics  
-Physics of Life Lecture (Prof. Dr. Erwin Frey)  
-Supervisor: Timo Krüger   
-https://www.physik.uni-muenchen.de/lehre/vorlesungen/sose_19/physics_of_life/index.html  
+Physics of Life Lecture (Prof. Dr. Erwin Frey)
+Supervisor: Timo Krüger  
+https://www.physik.uni-muenchen.de/lehre/vorlesungen/sose_19/physics_of_life/index.html
+Access to the written report:  
+The password is the year of the original Vicsek model publication  
 
 ## A) Project Structure
 Our repository consists of the following folders:
@@ -68,7 +70,7 @@ It can be easily adapted to sweep over further parameters, such as `polar_intera
 ### 4. Evaluation: Using the Jupyter Notebook
 
 - Download FFmpeg from https://ffmpeg.org/, which is necessary for processing images to videos.
-- Define the path to the `ffmpeg.exe` file on your computer as `FFmpeg1 = path` , e.g. `FFmpeg1 = "C:/Users//ffmpeg.exe"`.
+- Define the path to the `ffmpeg.exe` file on your computer as `FFmpeg1 = path` , e.g. `FFmpeg1 = "/usr/local/ffmpeg.exe"`.
 - Compile and run the C++ code as described previously.
 - Follow the steps in the jupyter notebook and run the `evaluation` function for the first processing step. Input parameters are:
  - `foldername`: folder with .txt files from source code output to be evaluated
