@@ -11,7 +11,7 @@ https://www.physik.uni-muenchen.de/lehre/vorlesungen/sose_19/physics_of_life/ind
 Access to the written report:  
 The password is the year of the original Vicsek model publication  
 
-This repository is a clone from our original LMU GitLab repository, available under:
+This repository is a clone from our original LMU GitLab repository, available under:  
 https://gitlab.physik.uni-muenchen.de/activemattersim19/vicsek-model
 
 
